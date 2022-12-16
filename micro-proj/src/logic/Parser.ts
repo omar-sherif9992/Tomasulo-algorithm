@@ -1,4 +1,3 @@
-import code from '../assembly/input'
 import Queue from './Queue';
 import {
     MemoryInstruction,
@@ -9,13 +8,12 @@ import {
 class Parser {
     static instructionQueue: Queue;
     constructor() {
-
     }
 
-    parseFile() {
+    // parses the input file to a Queue of instructions
+    parseFile(code: string) {
         const instructions = code.split(/\n/);
         Parser.instructionQueue = new Queue(instructions.reverse());
-        this.parse(code);
         return Parser.instructionQueue;
 
     }
@@ -42,7 +40,7 @@ class Parser {
 
         return {
             operation,
-            destination:parseInt(destination.substring(1)),
+            destination: parseInt(destination.substring(1)),
             source1: parseInt(source1.substring(1)), // the source 1 register have index of register in register file
             source2: parseInt(source2.substring(1)) // the source 2 register have index of register in register file
         } as ArithmeticInstruction;

@@ -30,8 +30,8 @@ class Issuer {
             ReservationStation = MulReservationStations;
         }
         for (let stationSlot = 0; stationSlot < ReservationStation.length; stationSlot++) {
+            console.log(stationSlot);
             if (!ReservationStation[stationSlot].busy) {
-
                 ReservationStation[stationSlot] = {
                     name: ReservationStation[stationSlot].name, // the name of reservation station normally
                     busy: true,
@@ -42,6 +42,8 @@ class Issuer {
                     Qk: RegisterFile[instruction.source2].reservationStageName ? RegisterFile[instruction.source2].reservationStageName : null,// if the found register is reserved by reservation station then the name of the reservation station otherwise null
                     A: 0
                 };
+                // to know which register is reserved by which reservation station
+                RegisterFile[instruction.destination].reservationStageName = ReservationStation[stationSlot].name;
                 return true;
             }
         }
@@ -61,8 +63,8 @@ class Issuer {
                         value: RegisterFile[instruction.register].reservationStageName ? null : RegisterFile[instruction.register].value,
                         Q: RegisterFile[instruction.register].reservationStageName ? RegisterFile[instruction.register].reservationStageName : null
                     };
+                    return true;
                 }
-                return true;
             }
             return false;
         }
@@ -79,9 +81,9 @@ class Issuer {
                         name: RegisterFile[instruction.register].name,
                         value: 0,
                         reservationStageName: LoadBuffers[stationSlot].name
-                    }
+                    };
+                    return true;
                 }
-                return true;
             }
             return false;
         }

@@ -1,35 +1,28 @@
+import { useState } from 'react';
 import Parser from './Parser'
 import Issuer from './Issuer';
-
-const parser = new Parser();
+import Queue from './Queue';
 const issuer = new Issuer();
-function main() {
+const parser = new Parser();
 
-    const instructionQueue = parser.parseFile();
+
+function main(clockCycle: number, instructionQueue: Queue) {
+
     let currentInstruction: string = instructionQueue.peek();
 
-
-
-
-    while (instructionQueue.length() > 0) {
-        currentInstruction = instructionQueue.dequeue();
-        console.log('currentInstruction');
-        console.log(currentInstruction);
-        const parsedInstruction = parser.parse(currentInstruction);
-        console.log('parsedInstruction');
-        console.log(parsedInstruction);
-        issuer.put(parsedInstruction);
+    currentInstruction = instructionQueue.dequeue();
+    console.log('currentInstruction');
+    console.log(currentInstruction);
+    const parsedInstruction = parser.parse(currentInstruction);
+    console.log('parsedInstruction');
+    console.log(parsedInstruction);
+    issuer.put(parsedInstruction);
 
 
 
 
-        /* 
-                if (!currentInstruction) {
-                    console.log('Wrong instructions to execute');
-                } */
-        // parser.parse(currentInstruction);
 
-    }
+
 }
 
 

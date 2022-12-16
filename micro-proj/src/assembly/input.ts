@@ -1,5 +1,5 @@
 const code = 
-`DIV.D F1,F2,F5`
+`ADD.D F1,F2,F5`
 /* const code = 
 `DIV.D F1,F2,F5
 MUL.D F1,F2,F3
