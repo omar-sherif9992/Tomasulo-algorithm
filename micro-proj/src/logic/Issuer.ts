@@ -1,68 +1,46 @@
-import { ArithmeticInstruction, MemoryInstruction } from './types';
-import { AddReservationStations, MulReservationStations, LoadBuffers, StoreBuffers, RegisterArray } from "./Arrays";
+import { ArithmeticInstruction, MemoryInstruction, ArithmeticReservationStation } from './types';
+import { AddReservationStations, MulReservationStations, LoadBuffers, StoreBuffers, RegisterFile, printStations } from "./Arrays";
+import INSTRUCTION from './Instruction.enum'
+const instructionSyntaxError = 'Syntax Error Instruction';
 
 class Issuer {
     // if false meaning you need to stall instruction queue and not dequeue
     put(instruction: ArithmeticInstruction | MemoryInstruction): boolean {
-        if (instruction.operation === 'S.D' || instruction.operation === 'L.D') {
-            return this.issueMemoryInstruction(instruction as MemoryInstruction);
-        } else {
-            return this.issueArithmeticInstruction(instruction as ArithmeticInstruction);
+        let stallFlag: boolean; 
+        if (instruction.operation === INSTRUCTION.SD || instruction.operation === INSTRUCTION.LD) {
+            stallFlag = this.issueMemoryInstruction(instruction as MemoryInstruction);
+        } else if (instruction.operation === INSTRUCTION.ADD || instruction.operation === INSTRUCTION.SUB || instruction.operation === INSTRUCTION.MUL || instruction.operation === INSTRUCTION.DIV) {
+            stallFlag = this.issueArithmeticInstruction(instruction as ArithmeticInstruction);
         }
+        else {
+            throw new Error(instructionSyntaxError);
+        }
+        printStations();
+        // if !stallFlag true then we need to stall instruction queue dequeuing otherwise execute 
+        return !stallFlag;
     }
 
     issueArithmeticInstruction(instruction: ArithmeticInstruction): boolean {
-        if (instruction.operation === 'ADD.D' || instruction.operation === 'SUB.D') {
-            for (let i = 0; i < AddReservationStations.length; i++) {
-                if (!AddReservationStations[i].busy) {
-
-                    AddReservationStations[i] = {
-                        name: AddReservationStations[i].name,
-                        busy: true,
-                        op: instruction.operation,
-                        Vj: RegisterArray[instruction.source1].reservationStage ? null : RegisterArray[i].value,
-                        Vk: RegisterArray[instruction.source2].reservationStage ? null : RegisterArray[i].value,
-                        Qj: RegisterArray[instruction.source1].reservationStage ? RegisterArray[instruction.source1].reservationStage : null,
-                        Qk: RegisterArray[instruction.source2].reservationStage ? RegisterArray[instruction.source2].reservationStage : null,
-                        A: 0
-                    };
-                    return true;
-                }
-            }
-            return false;
-        } else {
-            for (let i = 0; i < MulReservationStations.length; i++) {
-                if (!MulReservationStations[i].busy) {
-
-                    MulReservationStations[i] = {
-                        name: MulReservationStations[i].name,
-                        busy: true,
-                        op: instruction.operation,
-                        Vj: RegisterArray[instruction.source1].reservationStage ? null : RegisterArray[i].value,
-                        Vk: RegisterArray[instruction.source2].reservationStage ? null : RegisterArray[i].value,
-                        Qj: RegisterArray[instruction.source1].reservationStage ? RegisterArray[instruction.source1].reservationStage : null,
-                        Qk: RegisterArray[instruction.source2].reservationStage ? RegisterArray[instruction.source2].reservationStage : null,
-                        A: 0
-                    };
-                    return true;
-                }
-            }
-            return false;
+        let ReservationStation: ArithmeticReservationStation[];
+        // to know which reservation station to go for
+        if (instruction.operation === INSTRUCTION.ADD || instruction.operation === INSTRUCTION.SUB) {
+            ReservationStation = AddReservationStations;
         }
-    }
+        else if (instruction.operation === INSTRUCTION.MUL || instruction.operation === INSTRUCTION.DIV) {
+            ReservationStation = MulReservationStations;
+        }
+        for (let stationSlot = 0; stationSlot < ReservationStation.length; stationSlot++) {
+            if (!ReservationStation[stationSlot].busy) {
 
-    issueMemoryInstruction(instruction: MemoryInstruction) {
-        if (instruction.operation === 'S.D') {
-            for (let i = 0; i < StoreBuffers.length; i++) {
-                if (!StoreBuffers[i].busy) {
-                    StoreBuffers[i] = {
-                        name: StoreBuffers[i].name,
-                        busy: true,
-                        address: instruction.address,
-                        value: RegisterArray[instruction.address].reservationStage ? null : RegisterArray[i].value,
-                        Q: RegisterArray[instruction.address].reservationStage ? RegisterArray[instruction.address].reservationStage : null
-                    };
-
+                ReservationStation[stationSlot] = {
+                    name: ReservationStation[stationSlot].name, // the name of reservation station normally
+                    busy: true,
+                    op: instruction.operation,
+                    Vj: RegisterFile[instruction.source1].reservationStageName ? null : RegisterFile[instruction.source1].value, // if the found register is reserved by reservation station then the value is null otherwise the value of the register
+                    Vk: RegisterFile[instruction.source2].reservationStageName ? null : RegisterFile[instruction.source2].value,// if the found register is reserved by reservation station then the value is null otherwise the value of the register
+                    Qj: RegisterFile[instruction.source1].reservationStageName ? RegisterFile[instruction.source1].reservationStageName : null,// if the found register is reserved by reservation station then the name of the reservation station otherwise null
+                    Qk: RegisterFile[instruction.source2].reservationStageName ? RegisterFile[instruction.source2].reservationStageName : null,// if the found register is reserved by reservation station then the name of the reservation station otherwise null
+                    A: 0
                 };
                 return true;
             }
@@ -70,6 +48,45 @@ class Issuer {
         return false;
     }
 
+
+
+    issueMemoryInstruction(instruction: MemoryInstruction): boolean {
+        if (instruction.operation === INSTRUCTION.SD) {
+            for (let stationSlot = 0; stationSlot < StoreBuffers.length; stationSlot++) {
+                if (!StoreBuffers[stationSlot].busy) {
+                    StoreBuffers[stationSlot] = {
+                        name: StoreBuffers[stationSlot].name,
+                        busy: true,
+                        effectiveAddress: instruction.effectiveAddress,
+                        value: RegisterFile[instruction.register].reservationStageName ? null : RegisterFile[instruction.register].value,
+                        Q: RegisterFile[instruction.register].reservationStageName ? RegisterFile[instruction.register].reservationStageName : null
+                    };
+                }
+                return true;
+            }
+            return false;
+        }
+        else if ((instruction.operation) === INSTRUCTION.LD) {
+            for (let stationSlot = 0; stationSlot < LoadBuffers.length; stationSlot++) {
+                if (!LoadBuffers[stationSlot].busy) {
+                    LoadBuffers[stationSlot] = {
+                        name: LoadBuffers[stationSlot].name,
+                        busy: true,
+                        effectiveAddress: instruction.effectiveAddress
+                    };
+                    // make the according register stall for the this load
+                    RegisterFile[instruction.register] = {
+                        name: RegisterFile[instruction.register].name,
+                        value: 0,
+                        reservationStageName: LoadBuffers[stationSlot].name
+                    }
+                }
+                return true;
+            }
+            return false;
+        }
+
+    }
 }
 
 

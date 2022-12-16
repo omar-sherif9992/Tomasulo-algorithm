@@ -1,10 +1,10 @@
-import { LoadBuffer, Register, ReservationStation, StoreBuffer } from "./types";
+import { LoadBuffer, Register, ArithmeticReservationStation, StoreBuffer } from "./types";
 
-const RegisterArray: Register[] = new Array(32).fill(1).map((_, i) => (
+const RegisterFile: Register[] = new Array(32).fill(1).map((_, i) => (
     {
         name: 'F' + i,
         value: i,
-        reservationStage: null
+        reservationStageName: null
     }
 ));
 
@@ -12,7 +12,7 @@ const MemoryArray: number[] = new Array(32).fill(1).map((_, i) => (
     i
 ));
 
-const AddReservationStations: ReservationStation[] = new Array(3).fill(1).map((_, i) => {
+const AddReservationStations: ArithmeticReservationStation[] = new Array(3).fill(1).map((_, i) => {
     return {
         name: 'A' + i,
         busy: false,
@@ -25,7 +25,7 @@ const AddReservationStations: ReservationStation[] = new Array(3).fill(1).map((_
     }
 });
 
-const MulReservationStations: ReservationStation[] = new Array(2).fill(1).map((_, i) => {
+const MulReservationStations: ArithmeticReservationStation[] = new Array(2).fill(1).map((_, i) => {
     return {
         name: 'M' + i,
         busy: false,
@@ -42,18 +42,29 @@ const LoadBuffers: LoadBuffer[] = new Array(2).fill(1).map((_, i) => {
     return {
         name: 'L' + i,
         busy: false,
-        address: 0
+        effectiveAddress: 0
     }
 });
 const StoreBuffers: StoreBuffer[] = new Array(2).fill(1).map((_, i) => {
     return {
         name: 'S' + i,
         busy: false,
-        address: 0,
+        effectiveAddress: 0,
         value: null, // to be saved in memory
         Q: null
     }
 });
 
+function printStations(){
+    console.log('AddReservationStations');
+    console.log(AddReservationStations);
+    console.log('MulReservationStations');
+    console.log(MulReservationStations);
+    console.log('LoadBuffers');
+    console.log(LoadBuffers);
+    console.log('StoreBuffers');
+    console.log(StoreBuffers);
+} 
 
-export { RegisterArray, MulReservationStations, StoreBuffers, LoadBuffers, AddReservationStations, MemoryArray };
+
+export { RegisterFile, MulReservationStations, StoreBuffers, LoadBuffers, AddReservationStations, MemoryArray ,printStations};

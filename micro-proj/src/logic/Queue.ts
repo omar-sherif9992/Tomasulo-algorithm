@@ -1,5 +1,5 @@
 class Queue {
-    records=[];
+    records = [];
     constructor(records: string[]) {
         this.records = records;
     }
@@ -15,11 +15,12 @@ class Queue {
     peek() {
         return this.records[this.records.length - 1];
     }
-    length(){
+    length() {
         return this.records.length;
     }
     print() {
-        console.log('The queue records are -', this.records);
+        console.log('The instruction queue');
+        console.log(this.records);
     }
 }
 

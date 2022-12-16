@@ -1,10 +1,10 @@
 export type Register = {
     name: string;
     value: number;
-    reservationStage: string | null;
+    reservationStageName: string | null;
 }
 
-export type ReservationStation = {
+export type ArithmeticReservationStation = {
     name:string;
     busy: boolean;
     op: string;
@@ -18,23 +18,24 @@ export type ReservationStation = {
 export type LoadBuffer = {
     name:string;
     busy: boolean;
-    address: number;
+    effectiveAddress: number;
 }
 
 export type StoreBuffer = {
     name:string;
     busy: boolean;
-    address: number;
+    effectiveAddress: number;
     value: number | null;
     Q: string | null;
 
 }
 
-
+// S.D f1,100 // f1 register store it in memory address(effectiveAddress) 100
+// L.D f2,100 // f2 register load it to memory address(effectiveAddress) 100
 export type MemoryInstruction = {
     operation: string;
-    destination: number;
-    address: number;
+    effectiveAddress: number;
+    register: number;
 }
 
 
