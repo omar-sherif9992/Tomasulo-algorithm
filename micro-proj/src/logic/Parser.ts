@@ -1,19 +1,24 @@
 import Queue from './Queue';
 import {
     MemoryInstruction,
-    ArithmeticInstruction
+    ArithmeticInstruction,
+    logType
 }
     from '../common/types';
 
 class Parser {
     static instructionQueue: Queue;
-    constructor() {
+    setDisplayLog: (log: logType) => void;
+    clockCycle:number;
+    constructor(setDisplayLog: (log: logType) => void,  clockCycle:number) {
+        this.setDisplayLog = setDisplayLog;
+        this.clockCycle=clockCycle;
     }
 
     // parses the input file to a Queue of instructions
     parseFile(code: string) {
         const instructions = code.split(/\n/);
-        Parser.instructionQueue = new Queue(instructions.reverse());
+       // Parser.instructionQueue = new Queue(instructions.reverse());
         //return Parser.instructionQueue;
         return instructions;
 

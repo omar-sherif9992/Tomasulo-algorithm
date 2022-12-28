@@ -5,7 +5,7 @@ export type Register = {
 }
 
 export type ArithmeticReservationStation = {
-    name:string;
+    name: string;
     busy: boolean;
     op: string;
     Vj: number | null;
@@ -13,21 +13,24 @@ export type ArithmeticReservationStation = {
     Qj: string | null;
     Qk: string | null;
     A: number;
+    timeLeft:number;
 }
 
 export type LoadBuffer = {
-    name:string;
+    name: string;
     busy: boolean;
     effectiveAddress: number;
+    timeLeft:number;
+
 }
 
 export type StoreBuffer = {
-    name:string;
+    name: string;
     busy: boolean;
     effectiveAddress: number;
     value: number | null;
     Q: string | null;
-
+    timeLeft:number;
 }
 
 // S.D f1,100 // f1 register store it in memory address(effectiveAddress) 100
@@ -47,7 +50,7 @@ export type ArithmeticInstruction = {
 }
 
 
-export type QueueType={
+export type QueueType = {
     queue: string[];
     addToQueue: (item: string) => void;
     removeFromQueue: (item: any) => void;
@@ -56,3 +59,19 @@ export type QueueType={
     peek: () => string;
     length: () => number;
 };
+
+
+export type latencyType = {
+    'ADD.D': number,
+    "SUB.D":number,
+    "MUL.D":number,
+    "DIV.D":number,
+    "LD.D":number,
+    "SD.D":number,
+}
+
+
+export type logType = {
+    message: string,
+    clockCycle: number
+}

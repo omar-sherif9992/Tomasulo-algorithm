@@ -18,15 +18,19 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    height: 240vh;
-    width: 100vw;
+    min-height: 100vh;
+    min-width: 100vw;
+    height: fit-content;
+    width: fit-content;
     background-color: #242424;
     color: #fff;
 }
 
 .body {
-    height: 200vh;
-    width: 90%;
+    min-width: 90vw;
+    min-height: 90vh;
+    height: fit-content;
+    width: fit-content;
     background-color: #242424;
     color: #fff;
     border: 2px solid #fff;
