@@ -45,3 +45,14 @@ export type ArithmeticInstruction = {
     source1: number;
     source2: number;
 }
+
+
+export type QueueType={
+    queue: string[];
+    addToQueue: (item: string) => void;
+    removeFromQueue: (item: any) => void;
+    dequeue: () => string;
+    print: () => void;
+    peek: () => string;
+    length: () => number;
+};

@@ -15,23 +15,14 @@
     "moduleResolution": "node",
     "noEmit": false,
     "outDir": "dist",
+  "jsx":"react-jsx",
     "paths": {
       "@/*": ["*"],
-      "@Admin/*": ["./Admin/*"],
-      "@Authentication/*": ["./Authentication/*"],
-      "@Token/*": ["./Token/*"],
+      "@assembly/*": ["./assembly/*"],
+      "@components/*": ["./components/*"],
+      "@logic/*": ["./logic/*"],
       "@Common/*": ["./Common/*"],
       "@Config": ["./Config"],
-      "@Course/*": ["./Course/*"],
-      "@Databases": ["./Databases"],
-      "@Exceptions/*": ["./Exceptions/*"],
-      "@Instructor/*": ["./Instructor/*"],
-      "@Middlewares/*": ["./Middlewares/*"],
-      "@NewsLetter/*": ["./NewsLetter/*"],
-      "@Services/*": ["./Services/*"],
-      "@Trainee/*": ["./Trainee/*"],
-      "@User/*": ["./User/*"],
-      "@Utils/*": ["./Utils/*"]
     },
     "pretty": true,
     "resolveJsonModule": true,
@@ -40,5 +31,5 @@
     "typeRoots": ["node_modules/@types"]
   },
   "exclude": ["node_modules", "src/http", "src/logs"],
-  "include": ["src/**/*.ts", "src/**/*.json", ".env", "swagger.ts", "swagger.ts"]
+  "include": ["src/**/*.ts", "src/**/*.json", ".env", "swagger.ts", "swagger.ts", "src/logic/Main.tsx", "src/logic/Main.tsx", "src/logic/Arrays.tsx", "src/logic/Arrays.tsx"]
 }

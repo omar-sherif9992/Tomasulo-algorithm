@@ -3,7 +3,7 @@ import {
     MemoryInstruction,
     ArithmeticInstruction
 }
-    from './types';
+    from '../common/types';
 
 class Parser {
     static instructionQueue: Queue;
@@ -14,11 +14,16 @@ class Parser {
     parseFile(code: string) {
         const instructions = code.split(/\n/);
         Parser.instructionQueue = new Queue(instructions.reverse());
-        return Parser.instructionQueue;
+        //return Parser.instructionQueue;
+        return instructions;
 
     }
     // parses the input to a MemoryInstruction or ArithmeticInstruction object
     parse(input: string): MemoryInstruction | ArithmeticInstruction {
+        console.log('input');
+        console.log(input);
+
+        if(typeof input ==='string'){
         const instruction = input.split(' ');
         const operation = instruction[0];
 
@@ -45,7 +50,7 @@ class Parser {
             source2: parseInt(source2.substring(1)) // the source 2 register have index of register in register file
         } as ArithmeticInstruction;
 
-    }
+    }}
 
 }
 

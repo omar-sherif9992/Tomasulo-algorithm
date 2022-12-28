@@ -1,4 +1,4 @@
-import { LoadBuffer, Register, ArithmeticReservationStation, StoreBuffer } from "./types";
+import { LoadBuffer, Register, ArithmeticReservationStation, StoreBuffer } from "../common/types";
 
 const RegisterFile: Register[] = new Array(32).fill(1).map((_, i) => (
     {

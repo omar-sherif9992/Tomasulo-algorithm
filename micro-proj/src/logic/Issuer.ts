@@ -1,4 +1,4 @@
-import { ArithmeticInstruction, MemoryInstruction, ArithmeticReservationStation } from './types';
+import { ArithmeticInstruction, MemoryInstruction, ArithmeticReservationStation } from '../common/types';
 import { AddReservationStations, MulReservationStations, LoadBuffers, StoreBuffers, RegisterFile, printStations } from "./Arrays";
 import INSTRUCTION from './Instruction.enum'
 const instructionSyntaxError = 'Syntax Error Instruction';

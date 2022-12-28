@@ -1,9 +1,11 @@
+import { QueueType } from "../common/types";
 import { useState } from "react";
 
-function useQueue(){
-    const [queue, setQueue] = useState<string[]>([]);
 
-    const addToQueue = (item) => {
+function useQueue(instructions:string[]):QueueType{
+    const [queue, setQueue] = useState<string[]>(instructions);
+
+    const addToQueue = (item:string) => {
         setQueue([...queue, item]);
     }
 
@@ -12,10 +14,23 @@ function useQueue(){
     }
 
     const dequeue=()=>{
+        const item = queue[0];
         setQueue(queue.slice(1));
+        return item;
+    }
+    function print() {
+        console.log('Clock Cycle');
+        console.log('The instruction queue');
+        console.log(this.records);
+    }
+    function peek() {
+        return queue[queue.length - 1];
+    }
+    function length() {
+        return queue.length;
     }
 
-    return {queue, addToQueue, removeFromQueue}
+    return {queue, addToQueue, removeFromQueue,dequeue,print,peek,length};
 }
 
 export default useQueue;
