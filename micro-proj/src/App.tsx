@@ -15,7 +15,9 @@ import AddReservationStationsTable from './components/AddReservationStationTable
 import MulReservationStationsTable from './components/MulReservationStationTable';
 import LoadBuffersTable from './components/LoadBuffersTable';
 import StoreBuffersTable from './components/StoreBuffersTable';
+import STATUS from './common/Status.enum';
 import INSTRUCTION from './common/Instruction.enum';
+
 
 const parser = new Parser(()=>{},1);
 function App() {
@@ -23,7 +25,84 @@ function App() {
   const [clockCycle, setClockCycle] = useState(0);
   const Queue=useQueue(parser.parseFile(code));
   const [currentInstruction, setCurrentInstruction] = useState<string>( '');
-  const [logs,setLogs]=useState<logType[] >([]);
+  const [logs,setLogs]=useState<logType[] >([
+    {
+    message:"",
+    clockCycle:0,
+  },  {
+    message:"",
+    clockCycle:0,
+  },  {
+    message:"",
+    clockCycle:0,
+  },  {
+    message:"",
+    clockCycle:0,
+  },  {
+    message:"",
+    clockCycle:0,
+  },  {
+    message:"",
+    clockCycle:0,
+  },  {
+    message:"",
+    clockCycle:0,
+  },  {
+    message:"",
+    clockCycle:0,
+  },  {
+    message:"",
+    clockCycle:0,
+  },  {
+    message:"",
+    clockCycle:0,
+  },  {
+    message:"",
+    clockCycle:0,
+  },  {
+    message:"",
+    clockCycle:0,
+  },  {
+    message:"",
+    clockCycle:0,
+  },  {
+    message:"",
+    clockCycle:0,
+  },  {
+    message:"",
+    clockCycle:0,
+  },  {
+    message:"",
+    clockCycle:0,
+  },  {
+    message:"",
+    clockCycle:0,
+  },  {
+    message:"",
+    clockCycle:0,
+  },  {
+    message:"",
+    clockCycle:0,
+  },  {
+    message:"",
+    clockCycle:0,
+  },  {
+    message:"",
+    clockCycle:0,
+  },  {
+    message:"",
+    clockCycle:0,
+  },  {
+    message:"",
+    clockCycle:0,
+  },  {
+    message:"",
+    clockCycle:0,
+  },  {
+    message:"",
+    clockCycle:0,
+  },
+]);
   const [instructionValue,setInstructionsValue]=useState('');
   const [registerFile,setRegisterFile]=useState<typeof RegisterFile>(RegisterFile);
   const [addReservationStations,setAddReservationStations]=useState(AddReservationStations);
@@ -31,6 +110,7 @@ function App() {
   const [loadBuffers,setLoadBuffers]=useState(LoadBuffers);
   const [storeBuffers,setStoreBuffers]=useState(StoreBuffers);
   const [memoryArray,setMemoryArray]=useState<number[]>(MemoryArray);
+  const [status,setStatus]=useState<STATUS>(STATUS.ACTIVE);
   const [latency,setLatency]=useState<latencyType>({
     'ADD.D': 1,
     "SUB.D":4,
@@ -51,9 +131,9 @@ function App() {
   function nextClockCycle(){
   main(clockCycle,
     Queue,
+    latency,
     setDisplayCurrentInstruction,
     setDisplayMessage,
-    latency,
     setRegisterFile,
     setAddReservationStations,
     setMulReservationStations,
@@ -66,6 +146,8 @@ function App() {
     loadBuffers,
     storeBuffers,
     memoryArray,
+    status,
+    setStatus
     );
 
 setClockCycle(clockCycle+1);
@@ -77,41 +159,46 @@ setClockCycle(clockCycle+1);
   return (
     <div className="App">
       <h1>Micro Project</h1>
-      <div className='body'>
-        <div className='d-flex flex-row justify-content-between'>
-       {clockCycle ===0 ?
+      <div className='body row'>
+      <div className='col-10'>
+        <div className=''>
+       {clockCycle ===0 &&
        (<div className='m-5 d-flex flex-column justify-content-between'>
           <h3>Enter Your instructions :</h3>
           
         <input type='text' value={instructionValue} onChange={(e)=>setInstructionsValue(e.target.value)}/>
-      </div>):
-      <div className='d-flex'>
-         <LogTable logs={logs} clockCycle={clockCycle}/>
-
+      </div>)
  
-      {/** current instruction */}
-      <CurrentInstruction currentInstruction={currentInstruction}/>
-      
-   
-       <div className='px-3'>
-       <h2 className=''>Clock Cycle: {clockCycle}</h2>
-
-      <button className='btn btn-primary btn-lg' style={{
-        height:'50px'
-      }} onClick={() => {
-        nextClockCycle();
-       }}>{clockCycle>0? 'Next Clock Cycle':'Start ' }</button>
-       
-      </div>
-      </div>
 }
 
 {/** table of logs */}
     
       </div>
       { clockCycle>0 && (<>
+<div className='d-flex'>
+ <div className='py-5 d-flex flex-column gap-5'>
+ <h2 className=''>Clock Cycle: {clockCycle}</h2>
+ <h5 className=''>Status of instruction queue: {status}</h5>
+
+<button className='btn btn-primary btn-lg' style={{
+  height:'50px'
+}} onClick={() => {
+  nextClockCycle();
+ }}>{clockCycle>0? 'Next Clock Cycle':'Start ' }</button>
+
+</div>
+<div>
+
+</div>
+  {/** current instruction */}
+<CurrentInstruction currentInstruction={currentInstruction}/>
 <InstructionQueueTable Queue={Queue}/>
 
+ 
+
+
+
+</div>
       
    
       
@@ -138,12 +225,18 @@ setClockCycle(clockCycle+1);
           <div className='d-flex justify-content-end px-3'>
        <h2 className='mx-5'>Clock Cycle: {clockCycle}</h2>
 
+
       <button className='btn btn-primary btn-lg' onClick={() => {
         nextClockCycle();
        }}>{clockCycle>0? 'Next Clock Cycle':'Start ' }</button>
        
       </div>
       </div> 
+      <div className='col-2'>
+      <LogTable logs={logs} clockCycle={clockCycle}/>
+      </div>
+      </div> 
+      
        </div>
   
   )

@@ -17,6 +17,7 @@ function MulReservationStationsTable({mulReservationStations}:{mulReservationSta
             <th scope="col">Vk</th>
             <th scope="col">Qj</th>
             <th scope="col">Qk</th>
+            <th scope="col">A</th>
           </tr>
         </thead>
         <tbody>

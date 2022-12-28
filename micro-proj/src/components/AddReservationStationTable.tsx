@@ -17,11 +17,13 @@ function AddReservationStationsTable({addReservationStations}:{addReservationSta
             <th scope="col">Vk</th>
             <th scope="col">Qj</th>
             <th scope="col">Qk</th>
+            <th scope="col">A</th>
           </tr>
         </thead>
         <tbody>
           {addReservationStations.map((station, index) => (
             <tr key={index+232*32312}>
+                <td>{station.timeLeft}</td>
                 <td>{station.busy}</td>
                 <td>{station.name}</td>
                 <td>{station.op}</td>
