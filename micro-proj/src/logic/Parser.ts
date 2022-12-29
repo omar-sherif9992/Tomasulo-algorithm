@@ -20,7 +20,10 @@ class Parser {
         const instructions = code.split(/\n/);
        // Parser.instructionQueue = new Queue(instructions.reverse());
         //return Parser.instructionQueue;
-        return instructions;
+
+        const cleanedRecords= instructions
+        .filter((record)=>record!=='' && record.trim()!=='');
+        return cleanedRecords;
 
     }
     // parses the input to a MemoryInstruction or ArithmeticInstruction object
@@ -38,7 +41,7 @@ class Parser {
             const effectiveAddress = operands[1];
             return {
                 operation,
-                register: parseInt(register.substring(1)), // the register have index of register in register file
+                registerIndex: parseInt(register.substring(1)), // the register have index of register in register file
                 effectiveAddress: parseInt(effectiveAddress)
             } as MemoryInstruction;
         }
@@ -50,9 +53,9 @@ class Parser {
 
         return {
             operation,
-            destination: parseInt(destination.substring(1)),
-            source1: parseInt(source1.substring(1)), // the source 1 register have index of register in register file
-            source2: parseInt(source2.substring(1)) // the source 2 register have index of register in register file
+            destinationIndex: parseInt(destination.substring(1)),
+            source1Index: parseInt(source1.substring(1)), // the source 1 register have index of register in register file
+            source2Index: parseInt(source2.substring(1)) // the source 2 register have index of register in register file
         } as ArithmeticInstruction;
 
     }}

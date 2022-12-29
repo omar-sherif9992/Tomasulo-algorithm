@@ -14,6 +14,7 @@ export type ArithmeticReservationStation = {
     Qk: string | null;
     A: number;
     timeLeft:number;
+    registerDestinationIndex:number|null;
 }
 
 export type LoadBuffer = {
@@ -21,6 +22,8 @@ export type LoadBuffer = {
     busy: boolean;
     effectiveAddress: number;
     timeLeft:number;
+    registerDestinationIndex:number|null;
+
 
 }
 
@@ -31,6 +34,9 @@ export type StoreBuffer = {
     value: number | null;
     Q: string | null;
     timeLeft:number;
+    registerSourceIndex:number | null;
+
+
 }
 
 // S.D f1,100 // f1 register store it in memory address(effectiveAddress) 100
@@ -38,22 +44,22 @@ export type StoreBuffer = {
 export type MemoryInstruction = {
     operation: string;
     effectiveAddress: number;
-    register: number;
+    registerIndex: number;
 }
 
 
 export type ArithmeticInstruction = {
     operation: string;
-    destination: number;
-    source1: number;
-    source2: number;
+    destinationIndex: number;
+    source1Index: number;
+    source2Index: number;
 }
 
 
 export type QueueType = {
     queue: string[];
-    addToQueue: (item: string) => void;
-    removeFromQueue: (item: any) => void;
+    enqueue: (item: string) => void;
+    enqueueQueue: (records: string[]) => void;
     dequeue: () => string;
     print: () => void;
     peek: () => string;

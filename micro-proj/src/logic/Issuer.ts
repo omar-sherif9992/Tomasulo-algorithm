@@ -75,31 +75,48 @@ class Issuer {
 
     issueArithmeticInstruction(instruction: ArithmeticInstruction): boolean {
         let ReservationStation: ArithmeticReservationStation[];
+        let typeStation;
         // to know which reservation station to go for
         if (instruction.operation === INSTRUCTION.ADD || instruction.operation === INSTRUCTION.SUB) {
             ReservationStation = this.addReservationStations;
+            typeStation = 'Add';
             this.setDisplayLog({ message: 'checking Add reservation station for unbusy station', clockCycle: this.clockCycle });
         }
         else if (instruction.operation === INSTRUCTION.MUL || instruction.operation === INSTRUCTION.DIV) {
             ReservationStation = this.mulReservationStations;
+            typeStation = 'Mul';
             this.setDisplayLog({ message: 'checking Mul reservation station for unbusy station', clockCycle: this.clockCycle })
         }
         for (let stationSlot = 0; stationSlot < ReservationStation.length; stationSlot++) {
             console.log(stationSlot);
             if (!ReservationStation[stationSlot].busy) {
-                ReservationStation[stationSlot] = {
+                const newReservationStation=[...ReservationStation];
+                newReservationStation[stationSlot] = {
                     name: ReservationStation[stationSlot].name, // the name of reservation station normally
                     busy: true,
                     op: instruction.operation,
-                    Vj: RegisterFile[instruction.source1].reservationStageName ? null : RegisterFile[instruction.source1].value, // if the found register is reserved by reservation station then the value is null otherwise the value of the register
-                    Vk: RegisterFile[instruction.source2].reservationStageName ? null : RegisterFile[instruction.source2].value,// if the found register is reserved by reservation station then the value is null otherwise the value of the register
-                    Qj: RegisterFile[instruction.source1].reservationStageName ? RegisterFile[instruction.source1].reservationStageName : null,// if the found register is reserved by reservation station then the name of the reservation station otherwise null
-                    Qk: RegisterFile[instruction.source2].reservationStageName ? RegisterFile[instruction.source2].reservationStageName : null,// if the found register is reserved by reservation station then the name of the reservation station otherwise null
+                    Vj: RegisterFile[instruction.source1Index].reservationStageName ? null : RegisterFile[instruction.source1Index].value, // if the found register is reserved by reservation station then the value is null otherwise the value of the register
+                    Vk: RegisterFile[instruction.source2Index].reservationStageName ? null : RegisterFile[instruction.source2Index].value,// if the found register is reserved by reservation station then the value is null otherwise the value of the register
+                    Qj: RegisterFile[instruction.source1Index].reservationStageName ? RegisterFile[instruction.source1Index].reservationStageName : null,// if the found register is reserved by reservation station then the name of the reservation station otherwise null
+                    Qk: RegisterFile[instruction.source2Index].reservationStageName ? RegisterFile[instruction.source2Index].reservationStageName : null,// if the found register is reserved by reservation station then the name of the reservation station otherwise null
                     A: 0,
                     timeLeft: this.latency[instruction.operation],
+                    registerDestinationIndex: instruction.destinationIndex
                 };
-                // to know which register is reserved by which reservation station
-                RegisterFile[instruction.destination].reservationStageName = ReservationStation[stationSlot].name;
+                if (typeStation === 'Add') {
+                    this.setAddReservationStations(newReservationStation);
+                }
+                else if (typeStation === 'Mul') {
+                    this.setMulReservationStations(newReservationStation);
+                }
+                // to know which register is reserved by which reservation station tom make it stall
+                const newRegisterFile=[...RegisterFile];
+                newRegisterFile[instruction.destinationIndex] = {
+                    name: RegisterFile[instruction.destinationIndex].name,
+                    value: null,
+                    reservationStageName: ReservationStation[stationSlot].name
+                };
+                this.setRegisterFile(newRegisterFile);
 
                 this.setDisplayLog({ message: `issue instruction to station ${ReservationStation[stationSlot].name} Un-Busy `, clockCycle: this.clockCycle })
 
@@ -123,9 +140,11 @@ class Issuer {
                         name: StoreBuffers[stationSlot].name,
                         busy: true,
                         effectiveAddress: instruction.effectiveAddress,
-                        value: RegisterFile[instruction.register].reservationStageName ? null : RegisterFile[instruction.register].value,
-                        Q: RegisterFile[instruction.register].reservationStageName ? RegisterFile[instruction.register].reservationStageName : null,
+                        value: RegisterFile[instruction.registerIndex].reservationStageName ? null : RegisterFile[instruction.registerIndex].value,
+                        Q: RegisterFile[instruction.registerIndex].reservationStageName ? RegisterFile[instruction.registerIndex].reservationStageName : null,
                         timeLeft: this.latency[instruction.operation],
+                        registerSourceIndex:instruction.registerIndex
+
                     };
                     this.setDisplayLog({ message: `issue instruction to store ${StoreBuffers[stationSlot].name}  buffer `, clockCycle: this.clockCycle })
                     return true;
@@ -138,20 +157,25 @@ class Issuer {
             for (let stationSlot = 0; stationSlot < LoadBuffers.length; stationSlot++) {
                 // TODO: store and load same address missing
                 if (!LoadBuffers[stationSlot].busy) {
-                    this.loadBuffers[stationSlot] = {
+                    const newLoadBuffer=[...this.loadBuffers];
+                    newLoadBuffer[stationSlot] = {
                         name: LoadBuffers[stationSlot].name,
                         busy: true,
                         effectiveAddress: instruction.effectiveAddress,
                         timeLeft: this.latency[instruction.operation],
+                        registerDestinationIndex: instruction.registerIndex
                         
                     };
+                    this.setLoadBuffers(newLoadBuffer);
+
                     // make the according register stall for the this load
-                    this.registerFile[instruction.register] = {
-                        name: RegisterFile[instruction.register].name,
+                    const newRegisterFile=[...this.registerFile];
+                    newRegisterFile[instruction.registerIndex] = {
+                        name: RegisterFile[instruction.registerIndex].name,
                         value: 0,
                         reservationStageName: LoadBuffers[stationSlot].name,
-
                     };
+                    this.setRegisterFile(newRegisterFile);
                     this.setDisplayLog({ message: `issue instruction to load ${LoadBuffers[stationSlot].name}  buffer `, clockCycle: this.clockCycle })
                     return true;
                 }

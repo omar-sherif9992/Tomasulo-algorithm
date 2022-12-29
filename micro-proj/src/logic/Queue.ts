@@ -5,7 +5,8 @@ class Queue {
         this.print()
     }
 
-    enqueue(record) {
+
+    enqueue(record:string) {
         this.records.unshift(record);
     }
 

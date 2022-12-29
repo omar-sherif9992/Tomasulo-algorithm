@@ -5,12 +5,26 @@ import { useState } from "react";
 function useQueue(instructions:string[]):QueueType{
     const [queue, setQueue] = useState<string[]>(instructions);
 
-    const addToQueue = (item:string) => {
+    
+
+    const enqueue = (item:string) => {
+        if(!item || item.trim() === ''){
+            return;
+        }
         setQueue([...queue, item]);
     }
+    function enqueueQueue(records:string[]){
+    const cleanedRecords= records.map((record,index)=>{
 
-    const removeFromQueue = (item) => {
-        setQueue(queue.filter((i) => i !== item));
+        if(!record || record.trim() === ''){
+            return '';
+        }
+        return record;
+    })
+
+    console.log(cleanedRecords);
+
+        setQueue([...queue, ...cleanedRecords]);
     }
 
     const dequeue=()=>{
@@ -30,7 +44,7 @@ function useQueue(instructions:string[]):QueueType{
         return queue.length;
     }
 
-    return {queue, addToQueue, removeFromQueue,dequeue,print,peek,length};
+    return {queue, enqueue,enqueueQueue,dequeue,print,peek,length};
 }
 
 export default useQueue;

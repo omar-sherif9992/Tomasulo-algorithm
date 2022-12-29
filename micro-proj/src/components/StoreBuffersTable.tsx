@@ -22,7 +22,7 @@ function storeBuffersTable({storeBuffers}:{storeBuffers:typeof StoreBuffers}) {
           {storeBuffers.map((station, index) => (
             <tr key={index+232*32312}>
               <td>{station.timeLeft}</td>
-                <td>{station.busy}</td>
+              <td>{station.busy === true?'1':'0'}</td>
                 <td>{station.name}</td>   
                 <td>{station.effectiveAddress}</td> 
                 <td>{station.value}</td> 

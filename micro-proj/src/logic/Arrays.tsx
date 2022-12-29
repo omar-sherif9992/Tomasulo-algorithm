@@ -22,7 +22,8 @@ const AddReservationStations: ArithmeticReservationStation[] = new Array(3).fill
         Qj: null,
         Qk: null,
         A: 0,
-        timeLeft: 0
+        timeLeft: 0,
+        registerDestinationIndex:null
     }
 });
 
@@ -36,7 +37,9 @@ const MulReservationStations: ArithmeticReservationStation[] = new Array(2).fill
         Qj: null,
         Qk: null,
         A: 0,
-        timeLeft: 0
+        timeLeft: 0,
+        registerDestinationIndex:null
+
     }
 });
 
@@ -45,8 +48,8 @@ const LoadBuffers: LoadBuffer[] = new Array(2).fill(1).map((_, i) => {
         name: 'L' + i,
         busy: false,
         effectiveAddress: 0,
-        timeLeft:0
-
+        timeLeft:0,
+        registerDestinationIndex:null
     }
 });
 const StoreBuffers: StoreBuffer[] = new Array(2).fill(1).map((_, i) => {
@@ -56,7 +59,9 @@ const StoreBuffers: StoreBuffer[] = new Array(2).fill(1).map((_, i) => {
         effectiveAddress: 0,
         value: null, // to be saved in memory
         Q: null,
-        timeLeft: 0
+        timeLeft: 0,
+        registerSourceIndex:null
+
     }
 });
 
