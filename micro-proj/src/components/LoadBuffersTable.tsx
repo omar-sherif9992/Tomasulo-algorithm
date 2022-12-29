@@ -18,11 +18,11 @@ function loadBuffersTable({loadBuffers}:{loadBuffers:typeof LoadBuffers}) {
         <tbody>
           {loadBuffers.map((station, index) => (
             <tr key={index+232*32312}>
-                <td>{station.timeLeft}</td>
+                <td>{station.timeLeft ===null?'-':station.timeLeft}</td>
                 <td>{station.busy === true?'1':'0'}</td>
 
                 <td>{station.name}</td>                     
-                <td>{station.effectiveAddress}</td> 
+                <td>{station.effectiveAddress ===null?'-':station.effectiveAddress}</td> 
             </tr>
           ))}
         </tbody>

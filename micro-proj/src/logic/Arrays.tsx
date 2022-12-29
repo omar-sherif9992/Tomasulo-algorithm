@@ -1,3 +1,4 @@
+import INSTRUCTION from "../common/Instruction.enum";
 import { LoadBuffer, Register, ArithmeticReservationStation, StoreBuffer } from "../common/types";
 
 const RegisterFile: Register[] = new Array(32).fill(1).map((_, i) => (
@@ -16,13 +17,13 @@ const AddReservationStations: ArithmeticReservationStation[] = new Array(3).fill
     return {
         name: 'A' + i,
         busy: false,
-        op: '',
+        op: null,
         Vj: null,
         Vk: null,
         Qj: null,
         Qk: null,
-        A: 0,
-        timeLeft: 0,
+        A: null,
+        timeLeft: null,
         registerDestinationIndex:null
     }
 });
@@ -31,13 +32,13 @@ const MulReservationStations: ArithmeticReservationStation[] = new Array(2).fill
     return {
         name: 'M' + i,
         busy: false,
-        op: '',
+        op: null,
         Vj: null,
         Vk: null,
         Qj: null,
         Qk: null,
-        A: 0,
-        timeLeft: 0,
+        A: null,
+        timeLeft: null,
         registerDestinationIndex:null
 
     }
@@ -47,20 +48,22 @@ const LoadBuffers: LoadBuffer[] = new Array(2).fill(1).map((_, i) => {
     return {
         name: 'L' + i,
         busy: false,
-        effectiveAddress: 0,
-        timeLeft:0,
-        registerDestinationIndex:null
+        effectiveAddress: null,
+        timeLeft:null,
+        registerDestinationIndex:null,
+        op:null
     }
 });
 const StoreBuffers: StoreBuffer[] = new Array(2).fill(1).map((_, i) => {
     return {
         name: 'S' + i,
         busy: false,
-        effectiveAddress: 0,
+        effectiveAddress: null,
         value: null, // to be saved in memory
         Q: null,
-        timeLeft: 0,
-        registerSourceIndex:null
+        timeLeft: null,
+        registerSourceIndex:null,
+        op:null
 
     }
 });

@@ -143,7 +143,8 @@ class Issuer {
                         value: RegisterFile[instruction.registerIndex].reservationStageName ? null : RegisterFile[instruction.registerIndex].value,
                         Q: RegisterFile[instruction.registerIndex].reservationStageName ? RegisterFile[instruction.registerIndex].reservationStageName : null,
                         timeLeft: this.latency[instruction.operation],
-                        registerSourceIndex:instruction.registerIndex
+                        registerSourceIndex:instruction.registerIndex,
+                        op:INSTRUCTION.SD
 
                     };
                     this.setDisplayLog({ message: `issue instruction to store ${StoreBuffers[stationSlot].name}  buffer `, clockCycle: this.clockCycle })
@@ -163,7 +164,8 @@ class Issuer {
                         busy: true,
                         effectiveAddress: instruction.effectiveAddress,
                         timeLeft: this.latency[instruction.operation],
-                        registerDestinationIndex: instruction.registerIndex
+                        registerDestinationIndex: instruction.registerIndex,
+                        op:INSTRUCTION.LD
                         
                     };
                     this.setLoadBuffers(newLoadBuffer);

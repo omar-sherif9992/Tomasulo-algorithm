@@ -1,3 +1,5 @@
+import INSTRUCTION from "./Instruction.enum";
+
 export type Register = {
     name: string;
     value: number;
@@ -23,8 +25,7 @@ export type LoadBuffer = {
     effectiveAddress: number;
     timeLeft:number;
     registerDestinationIndex:number|null;
-
-
+    op:INSTRUCTION.LD | null;
 }
 
 export type StoreBuffer = {
@@ -35,8 +36,7 @@ export type StoreBuffer = {
     Q: string | null;
     timeLeft:number;
     registerSourceIndex:number | null;
-
-
+    op:INSTRUCTION.SD|null;
 }
 
 // S.D f1,100 // f1 register store it in memory address(effectiveAddress) 100

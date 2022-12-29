@@ -21,12 +21,12 @@ function storeBuffersTable({storeBuffers}:{storeBuffers:typeof StoreBuffers}) {
         <tbody>
           {storeBuffers.map((station, index) => (
             <tr key={index+232*32312}>
-              <td>{station.timeLeft}</td>
+              <td>{station.timeLeft ===null?'-':station.timeLeft}</td>
               <td>{station.busy === true?'1':'0'}</td>
                 <td>{station.name}</td>   
-                <td>{station.effectiveAddress}</td> 
-                <td>{station.value}</td> 
-                <td>{station.Q}</td> 
+                <td>{station.effectiveAddress ===null?'-':station.effectiveAddress}</td> 
+                <td>{station.value ===null?'-':station.value}</td> 
+                <td>{station.Q ===null?'-':station.Q}</td> 
                 
             </tr>
           ))}

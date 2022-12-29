@@ -17,6 +17,7 @@ function MemoryTable ({memoryArray}:{memoryArray:number[]})  {
                     <tr key={index+3213*54}>
                         <td>{index}</td>
                         <td>{value}</td>
+                        
                     </tr>
                 ))}
             </tbody>

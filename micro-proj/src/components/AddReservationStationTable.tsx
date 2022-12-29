@@ -23,15 +23,15 @@ function AddReservationStationsTable({addReservationStations}:{addReservationSta
         <tbody>
           {addReservationStations.map((station, index) => (
             <tr key={index+232*32312}>
-                <td>{station.timeLeft}</td>
+                <td>{station.timeLeft ===null?'-':station.timeLeft}</td>
                 <td>{station.busy === true?'1':'0'}</td>
                 <td>{station.name}</td>
-                <td>{station.op}</td>
-                <td>{station.Vj}</td>
-                <td>{station.Vk}</td>
-                <td>{station.Qj}</td>
-                <td>{station.Qk}</td>
-                <td>{station.A}</td>             
+                <td>{station.op ===null?'-':station.op}</td>
+                <td>{station.Vj ===null?'-':station.Vj}</td>
+                <td>{station.Vk ===null?'-':station.Vk}</td>
+                <td>{station.Qj===null?'-':station.Qj}</td>
+                <td>{station.Qk===null?'-':station.Qk}</td>
+                <td>{station.A ===null?'-':station.A}</td>             
             </tr>
           ))}
         </tbody>
