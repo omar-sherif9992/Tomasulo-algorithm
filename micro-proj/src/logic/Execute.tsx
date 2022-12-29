@@ -53,11 +53,11 @@ class Execute {
         this.loadBuffers = loadBuffers;
         this.storeBuffers = storeBuffers;
         this.memoryArray = memoryArray;
-
-        
-
     }
    
+ 
+
+
     executeInstruction(instruction: ArithmeticReservationStation | LoadBuffer | StoreBuffer) {
         switch (instruction.op) {
             case INSTRUCTION.ADD:
@@ -114,11 +114,10 @@ class Execute {
         const source1Value = Vj;
         const source2Value = Vk;
         const result = source1Value * source2Value;
+        const newRegisterFile = [...this.registerFile];
+        newRegisterFile[registerDestinationIndex].value = result;
 
-        this.registerFile[registerDestinationIndex].value = result;
-
-
-        this.setRegisterFile(this.registerFile);
+        this.setRegisterFile(newRegisterFile);
         this.setDisplayLog({ message: `MUL.D R${registerDestinationIndex}=${Vj}*${Vk}`, clockCycle: this.clockCycle });
         }
     }
@@ -129,7 +128,6 @@ class Execute {
         const source1Value = Vj;
         const source2Value = Vk;
         const result = source1Value / source2Value;
-
         const newRegisterFile = [...this.registerFile];
         newRegisterFile[registerDestinationIndex].value = result;
         this.setRegisterFile(newRegisterFile);
@@ -141,26 +139,26 @@ class Execute {
         const { effectiveAddress, registerDestinationIndex } = instruction;
         if(effectiveAddress && registerDestinationIndex){
         const memoryValue = this.memoryArray[effectiveAddress];
-        this.registerFile[registerDestinationIndex].value = memoryValue;
-        this.setRegisterFile(this.registerFile);
+        const newRegisterFile = [...this.registerFile];
+
+        newRegisterFile[registerDestinationIndex].value = memoryValue;
+        this.setRegisterFile(newRegisterFile);
         this.setDisplayLog({ message: `LD.D R${registerDestinationIndex} from  M[${effectiveAddress}]`, clockCycle: this.clockCycle });
         }
     }
 
     executeStore(instruction: StoreBuffer) {
         const { effectiveAddress, registerSourceIndex } = instruction;
-        if(registerSourceIndex){
+        if(registerSourceIndex && effectiveAddress){
         const registerSource = this.registerFile[registerSourceIndex];
         const newMemory=[...this.memoryArray];
-        
         newMemory[effectiveAddress] = registerSource.value;
         this.setMemoryArray(newMemory);
         this.setDisplayLog({ message: `SD.D  ${registerSource.name} stored in M[${effectiveAddress}] is executed`, clockCycle: this.clockCycle });
         }
     }
 
-    execute() {
-        this.setDisplayLog({ message: `Clock Cycle: ${this.clockCycle}`, clockCycle: this.clockCycle });
+    executeStations() {
         this.executeAddReservationStations();
         this.executeMulReservationStations();
         this.executeLoadBuffers();
@@ -171,15 +169,24 @@ class Execute {
         this.addReservationStations.forEach((station, index) => {
             if (station.busy && station.timeLeft === 0) {
                 this.executeInstruction(station);
-                this.addReservationStations[index] = {
-                    instruction: null,
+                const newAddReservationStations=[...this.addReservationStations];
+                newAddReservationStations[index] = {
+                    name: newAddReservationStations[index].name,
                     busy: false,
-                    timeLeft: 0,
+                    op: null,
+                    Vj: null,
+                    Vk: null,
+                    Qj: null,
+                    Qk: null,
+                    A: null,
+                    timeLeft: null,
+                    registerDestinationIndex:null
                 };
-                this.setAddReservationStations(this.addReservationStations);
+                this.setAddReservationStations(newAddReservationStations);
             } else if (station.busy && station.Vj && station.Vk) { // till the 2 operands are filled with the correct value
-                this.addReservationStations[index].timeLeft--;
-                this.setAddReservationStations(this.addReservationStations);
+                const newAddReservationStations=[...this.addReservationStations];
+                newAddReservationStations[index].timeLeft!--;
+                this.setAddReservationStations(newAddReservationStations);
             }
         });
     }
@@ -188,15 +195,23 @@ class Execute {
         this.mulReservationStations.forEach((station, index) => {
             if (station.busy && station.timeLeft === 0) {
                 this.executeInstruction(station);
-                this.mulReservationStations[index] = {
-                    instruction: null,
+                const newMulReservationStations=[...this.mulReservationStations];
+                newMulReservationStations[index] = {
+                    name: newMulReservationStations[index].name,
                     busy: false,
-                    latency: 0,
+                    op: null,
+                    Vj: null,
+                    Vk: null,
+                    Qj: null,
+                    Qk: null,
+                    A: null,
+                    timeLeft: null,
+                    registerDestinationIndex:null
                 };
-                this.setMulReservationStations(this.mulReservationStations);
+                this.setMulReservationStations(newMulReservationStations);
             } else if (station.busy && station.Vj && station.Vk ) {// till the 2 operands are filled with the correct value
                 const newMulReservationStations=[...this.mulReservationStations];
-                newMulReservationStations[index].timeLeft--;
+                newMulReservationStations[index].timeLeft!--;
                 this.setMulReservationStations(newMulReservationStations);
             }
         });
@@ -204,17 +219,22 @@ class Execute {
 
     executeLoadBuffers() {
         this.loadBuffers.forEach((buffer, index) => {
+            // TODO: We need to check here if multiple writes will occur what will occur
             if (buffer.busy && buffer.timeLeft === 0) {
                 this.executeInstruction(buffer);
-                this.loadBuffers[index] = {
-                    instruction: null,
+                const newLoadBuffers=[...this.loadBuffers];
+                newLoadBuffers[index] = {
+                    name:newLoadBuffers[index].name,
                     busy: false,
-                    latency: 0,
+                    effectiveAddress: null,
+                    timeLeft:null,
+                    registerDestinationIndex:null,
+                    op:null     
                 };
                 this.setLoadBuffers(this.loadBuffers);
-            } else if (buffer.busy && buffer.registerDestinationIndex) {
+            } else if (buffer.busy && buffer.registerDestinationIndex ) {
                 const newLoadBuffers=[...this.loadBuffers];
-                newLoadBuffers[index].timeLeft--;
+                newLoadBuffers[index].timeLeft!--;
                 this.setLoadBuffers(newLoadBuffers);
             }
         });
@@ -222,22 +242,24 @@ class Execute {
 
     executeStoreBuffers() {
         this.storeBuffers.forEach((buffer, index) => {
+            // TODO: We need to check here if multiple writes will occur what will occur
             if (buffer.busy && buffer.timeLeft === 0) {
                 this.executeInstruction(buffer);
                 const newStoreBuffers=[...this.storeBuffers]
                 newStoreBuffers[index] = {
-                    ...newStoreBuffers[index],
+                    name:newStoreBuffers[index].name,
+                    effectiveAddress:null,
                     busy:false,
                     value:null,
                     Q:null,
-                    timeLeft:0,
+                    timeLeft:null,
                     registerSourceIndex:null,
                     op:null
                 };
                 this.setStoreBuffers(newStoreBuffers);
             } else if (buffer.busy && buffer.registerSourceIndex) {
                 const newStoreBuffers=[...this.storeBuffers];
-                newStoreBuffers[index].timeLeft--;
+                newStoreBuffers[index].timeLeft!--;
                 this.setStoreBuffers(newStoreBuffers);
             }
         });

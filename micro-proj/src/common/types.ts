@@ -9,21 +9,21 @@ export type Register = {
 export type ArithmeticReservationStation = {
     name: string;
     busy: boolean;
-    op: string;
+    op: string |null;
     Vj: number | null;
     Vk: number | null;
     Qj: string | null;
     Qk: string | null;
-    A: number;
-    timeLeft:number;
+    A: number |null;
+    timeLeft:number | null;
     registerDestinationIndex:number|null;
 }
 
 export type LoadBuffer = {
     name: string;
     busy: boolean;
-    effectiveAddress: number;
-    timeLeft:number;
+    effectiveAddress: number | null;
+    timeLeft:number | null;
     registerDestinationIndex:number|null;
     op:INSTRUCTION.LD | null;
 }
@@ -31,10 +31,10 @@ export type LoadBuffer = {
 export type StoreBuffer = {
     name: string;
     busy: boolean;
-    effectiveAddress: number;
+    effectiveAddress: number | null;
     value: number | null;
     Q: string | null;
-    timeLeft:number;
+    timeLeft:number |null;
     registerSourceIndex:number | null;
     op:INSTRUCTION.SD|null;
 }
@@ -44,7 +44,7 @@ export type StoreBuffer = {
 export type MemoryInstruction = {
     operation: string;
     effectiveAddress: number;
-    registerIndex: number;
+    registerIndex: number ;
 }
 
 
@@ -63,6 +63,7 @@ export type QueueType = {
     dequeue: () => string;
     print: () => void;
     peek: () => string;
+    removeItemByIndex:(index:number) => void;
     length: () => number;
 };
 
@@ -72,8 +73,8 @@ export type latencyType = {
     "SUB.D":number,
     "MUL.D":number,
     "DIV.D":number,
-    "LD.D":number,
-    "SD.D":number,
+    "L.D":number,
+    "S.D":number,
 }
 
 

@@ -3,8 +3,8 @@ enum INSTRUCTION{
     SUB = "SUB.D",
     MUL = "MUL.D",
     DIV = "DIV.D",
-    LD = "LD.D",
-    SD = "SD.D",
+    LD = "L.D",
+    SD = "S.D",
 }
 
 

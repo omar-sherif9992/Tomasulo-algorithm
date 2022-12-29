@@ -75,17 +75,17 @@ class Issuer {
 
     issueArithmeticInstruction(instruction: ArithmeticInstruction): boolean {
         let ReservationStation: ArithmeticReservationStation[];
-        let typeStation;
+        let typeStation:string;
         // to know which reservation station to go for
         if (instruction.operation === INSTRUCTION.ADD || instruction.operation === INSTRUCTION.SUB) {
             ReservationStation = this.addReservationStations;
             typeStation = 'Add';
-            this.setDisplayLog({ message: 'checking Add reservation station for unbusy station', clockCycle: this.clockCycle });
+            this.setDisplayLog({ message: 'checking Add reservation stations for unbusy station', clockCycle: this.clockCycle });
         }
         else if (instruction.operation === INSTRUCTION.MUL || instruction.operation === INSTRUCTION.DIV) {
             ReservationStation = this.mulReservationStations;
             typeStation = 'Mul';
-            this.setDisplayLog({ message: 'checking Mul reservation station for unbusy station', clockCycle: this.clockCycle })
+            this.setDisplayLog({ message: 'checking Mul reservation stations for unbusy station', clockCycle: this.clockCycle })
         }
         for (let stationSlot = 0; stationSlot < ReservationStation.length; stationSlot++) {
             console.log(stationSlot);
@@ -118,13 +118,13 @@ class Issuer {
                 };
                 this.setRegisterFile(newRegisterFile);
 
-                this.setDisplayLog({ message: `issue instruction to station ${ReservationStation[stationSlot].name} Un-Busy `, clockCycle: this.clockCycle })
+                this.setDisplayLog({ message: `issue ${instruction.operation} instruction to ${ReservationStation[stationSlot].name} station Un-Busy `, clockCycle: this.clockCycle })
 
                 return true;
 
             }
         }
-        this.setDisplayLog({ message: `unable to issue the instruction no station ${ReservationStation[0].name} is Un-Busy `, clockCycle: this.clockCycle })
+        this.setDisplayLog({ message: `unable to issue ${instruction.operation} instruction no ${typeStation} station is Un-Busy `, clockCycle: this.clockCycle })
 
         return false;
     }
@@ -147,11 +147,11 @@ class Issuer {
                         op:INSTRUCTION.SD
 
                     };
-                    this.setDisplayLog({ message: `issue instruction to store ${StoreBuffers[stationSlot].name}  buffer `, clockCycle: this.clockCycle })
+                    this.setDisplayLog({ message: `issue ${instruction.operation} instruction to store ${StoreBuffers[stationSlot].name}  buffer `, clockCycle: this.clockCycle })
                     return true;
                 }
             }
-            this.setDisplayLog({ message: `unable to issue the instruction no store buffer is Un-Busy `, clockCycle: this.clockCycle })
+            this.setDisplayLog({ message: `unable to issue ${instruction.operation} instruction no store buffer is Un-Busy `, clockCycle: this.clockCycle })
             return false;
         }
         else if ((instruction.operation) === INSTRUCTION.LD) {
@@ -178,11 +178,11 @@ class Issuer {
                         reservationStageName: LoadBuffers[stationSlot].name,
                     };
                     this.setRegisterFile(newRegisterFile);
-                    this.setDisplayLog({ message: `issue instruction to load ${LoadBuffers[stationSlot].name}  buffer `, clockCycle: this.clockCycle })
+                    this.setDisplayLog({ message: `issue ${instruction.operation} instruction to load ${LoadBuffers[stationSlot].name}  buffer `, clockCycle: this.clockCycle })
                     return true;
                 }
             }
-            this.setDisplayLog({ message: `unable to issue the instruction no load buffer is Un-Busy `, clockCycle: this.clockCycle })
+            this.setDisplayLog({ message: `unable to issue ${instruction.operation} instruction no load buffer is Un-Busy `, clockCycle: this.clockCycle })
             return false;
         }
 

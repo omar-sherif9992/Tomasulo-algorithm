@@ -16,6 +16,7 @@ import MulReservationStationsTable from './components/MulReservationStationTable
 import LoadBuffersTable from './components/LoadBuffersTable';
 import StoreBuffersTable from './components/StoreBuffersTable';
 import STATUS from './common/Status.enum';
+import Form from './components/Form';
 
 
 const parser = new Parser(()=>{},1);
@@ -38,8 +39,8 @@ function App() {
     "SUB.D":4,
     "MUL.D":5,
     "DIV.D":2,
-    "LD.D":3,
-    "SD.D":10,
+    "L.D":3,
+    "S.D":10,
   });
   
 
@@ -83,38 +84,17 @@ setClockCycle(clockCycle+1);
       <h1>Micro Project</h1>
       <div className='body row'>
        {status ===STATUS.FETCHING &&
-        (<div className=''>
-          <div className='m-5 d-flex flex-column justify-content-between'>
-          <h3>Enter Your instructions :</h3>
-         <div className='row'>
-          <div className='col-10'>
-        <textarea 
-        className='form-control'
-        value={instructionValue} onChange={(e)=>{
-          setInstructionsValue(e.target.value);
+        (
           
-        }}/></div>
-                  <div className='col-2'>
-
-        <button className='btn btn-primary btn-lg' onClick={()=>{  
-          Queue.enqueueQueue(parser.parseFile(instructionValue));
-          setInstructionsValue('');
-        }}>Add</button>
-        </div>
-        <div className='col-8 '>
-        <InstructionQueueTable Queue={Queue}/>
-
-          </div>
-<div className='col-4 my-5'>
-        <button className='btn btn-primary btn-lg' onClick={()=>{
-          setStatus(STATUS.ACTIVE);
-        }
-        }>Start</button>
-        </div>
-        </div> 
-  
-      </div>
-      </div>)
+          <Form
+          setStatus={setStatus}
+          latency={latency}
+            setLatency={setLatency}
+            setInstructionsValue={setInstructionsValue}
+            instructionValue={instructionValue}
+            Queue={Queue} />
+       
+      )
 }
 
 {/** table of logs */}
@@ -139,7 +119,7 @@ setClockCycle(clockCycle+1);
 </div>
   {/** current instruction */}
 <CurrentInstruction currentInstruction={currentInstruction}/>
-<InstructionQueueTable Queue={Queue}/>
+<InstructionQueueTable Queue={Queue} removable={false}/>
 
  
 
