@@ -34,6 +34,9 @@ function App() {
   const [storeBuffers,setStoreBuffers]=useState(StoreBuffers);
   const [memoryArray,setMemoryArray]=useState<number[]>(MemoryArray);
   const [status,setStatus]=useState<STATUS>(STATUS.FETCHING);
+
+  const [cycleTable,setCycleTable]=useState([]);
+
   const [latency,setLatency]=useState<latencyType>({
     'ADD.D': 1,
     "SUB.D":4,

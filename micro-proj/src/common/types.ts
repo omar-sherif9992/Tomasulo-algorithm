@@ -82,3 +82,12 @@ export type logType = {
     message: string,
     clockCycle: number
 }
+
+
+export type cycleTableType={
+    instruction:string;
+    issueClockCycleNumber:number|null;
+    executeStartClockCycleNumber:number|null;
+    executeEndClockCycleNumber:number|null;
+    writeBackClockCycleNumber:number|null;
+}
