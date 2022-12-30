@@ -10,7 +10,7 @@ import MemoryTable from './components/MemoryTable';
 import CurrentInstruction from './components/CurrentInstruction';
 import InstructionQueueTable from './components/InstructionQueueTable';
 import LogTable from './components/LogTable';
-import { latencyType, logType } from './common/types';
+import { cycleTableType, latencyType, logType } from './common/types';
 import AddReservationStationsTable from './components/AddReservationStationTable';
 import MulReservationStationsTable from './components/MulReservationStationTable';
 import LoadBuffersTable from './components/LoadBuffersTable';
@@ -35,7 +35,7 @@ function App() {
   const [memoryArray,setMemoryArray]=useState<number[]>(MemoryArray);
   const [status,setStatus]=useState<STATUS>(STATUS.FETCHING);
 
-  const [cycleTable,setCycleTable]=useState([]);
+  const [cycleTable,setCycleTable]=useState<cycleTableType[]>([]);
 
   const [latency,setLatency]=useState<latencyType>({
     'ADD.D': 1,
