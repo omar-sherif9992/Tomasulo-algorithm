@@ -6,7 +6,7 @@ from '../logic/Arrays'
 function loadBuffersTable({loadBuffers}:{loadBuffers:typeof LoadBuffers}) {
     return <div className='m-5 d-flex flex-column justify-content-between'>
       <h3>Load Buffers</h3>
-      <table className='table table-striped bg-light'>
+      <table className='table table-striped bg-light table-hover shadow'>
         <thead>
           <tr>
           <th scope="col">Time</th>

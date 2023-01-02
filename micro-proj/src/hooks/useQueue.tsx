@@ -4,9 +4,6 @@ import { useState } from "react";
 
 function useQueue(instructions:string[]):QueueType {
     const [queue, setQueue] = useState<string[]>(instructions);
-
-    
-
     const enqueue = (item:string) => {
         if(!item || item.trim() === ''){
             return;

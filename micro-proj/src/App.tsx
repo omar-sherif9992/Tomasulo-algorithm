@@ -18,12 +18,13 @@ import StoreBuffersTable from './components/StoreBuffersTable';
 import STATUS from './common/Status.enum';
 import Form from './components/Form';
 import CycleTable from './components/CycleTable';
+import LatenciesTable from './components/LatenciesTable';
 
 
-const parser = new Parser(()=>{},1);
+const parser = new Parser(()=>{},0);
 function App() {
 
-  const [clockCycle, setClockCycle] = useState(1);
+  const [clockCycle, setClockCycle] = useState(0);
   const Queue=useQueue(parser.parseFile(code));
   const [currentInstruction, setCurrentInstruction] = useState<string>( '');
   const [logs,setLogs]=useState<logType[] >([]);
@@ -39,14 +40,13 @@ function App() {
   const [cycleTable,setCycleTable]=useState<cycleTableType[]>([]);
 
   const [latency,setLatency]=useState<latencyType>({
-    'ADD.D': 1,
+    'ADD.D': 4,
     "SUB.D":4,
-    "MUL.D":5,
-    "DIV.D":2,
+    "MUL.D":6,
+    "DIV.D":6,
     "L.D":3,
     "S.D":10,
   });
-  
 
 
   function setDisplayMessage(displayMessage:logType){
@@ -93,13 +93,12 @@ setClockCycle(clockCycle+1);
         (
           
           <Form
-          setStatus={setStatus}
-          latency={latency}
+            setStatus={setStatus}
+            latency={latency}
             setLatency={setLatency}
             setInstructionsValue={setInstructionsValue}
             instructionValue={instructionValue}
             Queue={Queue} />
-       
       )
 }
 
@@ -134,15 +133,22 @@ setClockCycle(clockCycle+1);
 </div>
       
    
-      
-      <div className='d-flex flex-row gapx-1'>
+      <div className='d-flex '>
+      <div className='d-flex flex-row gapx-1 flex-wrap'>
+      <LatenciesTable latencies={latency}  />
+
       <AddReservationStationsTable addReservationStations={addReservationStations} />
    <MulReservationStationsTable mulReservationStations={mulReservationStations} />
-   <LoadBuffersTable loadBuffers={loadBuffers}/>
-   <StoreBuffersTable storeBuffers={storeBuffers}/>
+  
       </div>  
 
-      <div className='d-flex'>
+      <div className='d-flex flex-row gapx-1 flex-wrap'>
+      <LoadBuffersTable loadBuffers={loadBuffers}/>
+   <StoreBuffersTable storeBuffers={storeBuffers}/>
+</div>
+</div>
+
+      <div className='d-flex justify-content-center'>
     <RegisterFileTable registerFile={registerFile}/>
    <MemoryTable memoryArray={memoryArray}/> 
 

@@ -5,7 +5,7 @@ function MemoryTable ({memoryArray}:{memoryArray:number[]})  {
   return (
     <div className='m-5 d-flex flex-column justify-content-between'>
         <h3>Memory</h3>
-        <table className='table table-striped bg-light'>
+        <table className='table table-striped bg-light table-hover shadow'>
             <thead>
                 <tr>
                     <th scope="col">Effective Address</th>

@@ -1,4 +1,4 @@
-class Queue {
+/* class Queue {
     records = [];
     constructor(records: string[]) {
         this.records = records;
@@ -31,4 +31,4 @@ class Queue {
     }
 }
 
-export default Queue;
+export default Queue; */

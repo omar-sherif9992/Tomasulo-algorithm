@@ -6,7 +6,7 @@ function LatenciesTable ({latencies}:{latencies:latencyType})  {
   return (
     <div className='m-5 d-flex flex-column justify-content-between'>
         <h3>Latencies</h3>
-        <table className='table table-striped bg-light'>
+        <table className='table table-striped bg-light table-hover shadow'>
             <thead>
                 <tr>
                     <th scope="col">Latency</th>

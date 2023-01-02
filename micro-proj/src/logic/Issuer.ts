@@ -89,7 +89,9 @@ class Issuer {
         }
         for (let stationSlot = 0; stationSlot < ReservationStation.length; stationSlot++) {
             console.log(stationSlot);
-            if (!ReservationStation[stationSlot].busy) {
+            if (!ReservationStation[stationSlot].busy) { // finding the first unbusy slot
+                
+                // deep cloning for react state
                 const newReservationStation=[...ReservationStation];
                 newReservationStation[stationSlot] = {
                     name: ReservationStation[stationSlot].name, // the name of reservation station normally
@@ -101,7 +103,9 @@ class Issuer {
                     Qk: RegisterFile[instruction.source2Index].reservationStageName ? RegisterFile[instruction.source2Index].reservationStageName : null,// if the found register is reserved by reservation station then the name of the reservation station otherwise null
                     A: 0,
                     timeLeft: this.latency[instruction.operation],
-                    registerDestinationIndex: instruction.destinationIndex
+                    registerDestinationIndex: instruction.destinationIndex,
+                    registerDestinationValue: null,
+                    instructionIndex:instruction.instructionIndex
                 };
                 if (typeStation === 'Add') {
                     this.setAddReservationStations(newReservationStation);
@@ -109,19 +113,17 @@ class Issuer {
                 else if (typeStation === 'Mul') {
                     this.setMulReservationStations(newReservationStation);
                 }
+
+                // deep cloning for react state
                 // to know which register is reserved by which reservation station tom make it stall
                 const newRegisterFile=[...RegisterFile];
                 newRegisterFile[instruction.destinationIndex] = {
-                    name: RegisterFile[instruction.destinationIndex].name,
-                    value: null,
+                    ...newRegisterFile[instruction.destinationIndex],
                     reservationStageName: ReservationStation[stationSlot].name
                 };
                 this.setRegisterFile(newRegisterFile);
-
                 this.setDisplayLog({ message: `issue ${instruction.operation} instruction to ${ReservationStation[stationSlot].name} station Un-Busy `, clockCycle: this.clockCycle })
-
                 return true;
-
             }
         }
         this.setDisplayLog({ message: `unable to issue ${instruction.operation} instruction no ${typeStation} station is Un-Busy `, clockCycle: this.clockCycle })
@@ -132,20 +134,21 @@ class Issuer {
 
 
     issueMemoryInstruction(instruction: MemoryInstruction): boolean {
-        if (instruction.operation === INSTRUCTION.SD) {
+        if (instruction.operation === INSTRUCTION.SD) { 
             for (let stationSlot = 0; stationSlot < StoreBuffers.length; stationSlot++) {
                 // TODO: store and load same address missing
-                if (!StoreBuffers[stationSlot].busy) {
+                if (!StoreBuffers[stationSlot].busy) { // find the first unbusy slot in store buffer
                     this.storeBuffers[stationSlot] = {
-                        name: StoreBuffers[stationSlot].name,
+                        name: StoreBuffers[stationSlot].name, 
                         busy: true,
                         effectiveAddress: instruction.effectiveAddress,
-                        value: RegisterFile[instruction.registerIndex].reservationStageName ? null : RegisterFile[instruction.registerIndex].value,
+                        value: RegisterFile[instruction.registerIndex].reservationStageName ? null : RegisterFile[instruction.registerIndex].value, // if the found register is reserved by reservation station then the value is null otherwise the value of the register
                         Q: RegisterFile[instruction.registerIndex].reservationStageName ? RegisterFile[instruction.registerIndex].reservationStageName : null,
                         timeLeft: this.latency[instruction.operation],
                         registerSourceIndex:instruction.registerIndex,
-                        op:INSTRUCTION.SD
-
+                        op:INSTRUCTION.SD,
+                        registerDestinationValue: null,
+                        instructionIndex:instruction.instructionIndex,                        
                     };
                     this.setDisplayLog({ message: `issue ${instruction.operation} instruction to store ${StoreBuffers[stationSlot].name}  buffer `, clockCycle: this.clockCycle })
                     return true;
@@ -157,7 +160,9 @@ class Issuer {
         else if ((instruction.operation) === INSTRUCTION.LD) {
             for (let stationSlot = 0; stationSlot < LoadBuffers.length; stationSlot++) {
                 // TODO: store and load same address missing
-                if (!LoadBuffers[stationSlot].busy) {
+                if (!LoadBuffers[stationSlot].busy) { // find the first unbusy slot in load buffer
+
+                    // deep cloning for react state
                     const newLoadBuffer=[...this.loadBuffers];
                     newLoadBuffer[stationSlot] = {
                         name: LoadBuffers[stationSlot].name,
@@ -165,20 +170,21 @@ class Issuer {
                         effectiveAddress: instruction.effectiveAddress,
                         timeLeft: this.latency[instruction.operation],
                         registerDestinationIndex: instruction.registerIndex,
-                        op:INSTRUCTION.LD
-                        
+                        op:INSTRUCTION.LD,
+                        registerDestinationValue: null,
+                        instructionIndex:instruction.instructionIndex,                        
                     };
                     this.setLoadBuffers(newLoadBuffer);
 
+                    // deep cloning for react state
                     // make the according register stall for the this load
                     const newRegisterFile=[...this.registerFile];
                     newRegisterFile[instruction.registerIndex] = {
-                        name: RegisterFile[instruction.registerIndex].name,
-                        value: 0,
+                        ...newRegisterFile[instruction.registerIndex],
                         reservationStageName: LoadBuffers[stationSlot].name,
                     };
                     this.setRegisterFile(newRegisterFile);
-                    this.setDisplayLog({ message: `issue ${instruction.operation} instruction to load ${LoadBuffers[stationSlot].name}  buffer `, clockCycle: this.clockCycle })
+                    this.setDisplayLog({ message: `issue ${instruction.operation} instruction to load ${LoadBuffers[stationSlot].name} buffer `, clockCycle: this.clockCycle })
                     return true;
                 }
             }

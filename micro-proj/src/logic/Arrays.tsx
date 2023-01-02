@@ -5,7 +5,7 @@ const RegisterFile: Register[] = new Array(32).fill(1).map((_, i) => (
     {
         name: 'F' + i,
         value: i,
-        reservationStageName: null
+        reservationStageName: null //if null means value up to date
     }
 ));
 
@@ -24,7 +24,9 @@ const AddReservationStations: ArithmeticReservationStation[] = new Array(3).fill
         Qk: null,
         A: null,
         timeLeft: null,
-        registerDestinationIndex:null
+        registerDestinationIndex:null,
+        registerDestinationValue:null,
+        instructionIndex:null
     }
 });
 
@@ -39,7 +41,9 @@ const MulReservationStations: ArithmeticReservationStation[] = new Array(2).fill
         Qk: null,
         A: null,
         timeLeft: null,
-        registerDestinationIndex:null
+        registerDestinationIndex:null,
+        registerDestinationValue:null,
+        instructionIndex:null
 
     }
 });
@@ -51,7 +55,10 @@ const LoadBuffers: LoadBuffer[] = new Array(2).fill(1).map((_, i) => {
         effectiveAddress: null,
         timeLeft:null,
         registerDestinationIndex:null,
-        op:null
+        op:null,
+        registerDestinationValue:null,
+        instructionIndex:null
+
     }
 });
 const StoreBuffers: StoreBuffer[] = new Array(2).fill(1).map((_, i) => {
@@ -63,8 +70,9 @@ const StoreBuffers: StoreBuffer[] = new Array(2).fill(1).map((_, i) => {
         Q: null,
         timeLeft: null,
         registerSourceIndex:null,
-        op:null
-
+        op:null,    
+        instructionIndex:null,
+        registerDestinationValue:null,
     }
 });
 

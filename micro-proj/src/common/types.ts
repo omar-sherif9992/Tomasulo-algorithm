@@ -17,6 +17,8 @@ export type ArithmeticReservationStation = {
     A: number |null;
     timeLeft:number | null;
     registerDestinationIndex:number|null;
+    registerDestinationValue:number|null;
+    instructionIndex:number|null;
 }
 
 export type LoadBuffer = {
@@ -26,6 +28,9 @@ export type LoadBuffer = {
     timeLeft:number | null;
     registerDestinationIndex:number|null;
     op:INSTRUCTION.LD | null;
+    registerDestinationValue:number|null;
+    instructionIndex:number|null;
+
 }
 
 export type StoreBuffer = {
@@ -37,6 +42,8 @@ export type StoreBuffer = {
     timeLeft:number |null;
     registerSourceIndex:number | null;
     op:INSTRUCTION.SD|null;
+    instructionIndex:number|null;
+    registerDestinationValue:number|null;
 }
 
 // S.D f1,100 // f1 register store it in memory address(effectiveAddress) 100
@@ -44,7 +51,8 @@ export type StoreBuffer = {
 export type MemoryInstruction = {
     operation: string;
     effectiveAddress: number;
-    registerIndex: number ;
+    registerIndex: number;
+    instructionIndex:number;
 }
 
 
@@ -53,6 +61,7 @@ export type ArithmeticInstruction = {
     destinationIndex: number;
     source1Index: number;
     source2Index: number;
+    instructionIndex:number;
 }
 
 
@@ -85,6 +94,7 @@ export type logType = {
 
 
 export type cycleTableType={
+    instructionIndex:number;
     instruction:string;
     issueClockCycleNumber:number|null;
     executeStartClockCycleNumber:number|null;

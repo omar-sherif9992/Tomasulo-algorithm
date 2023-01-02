@@ -5,7 +5,7 @@ function InstructionQueueTable({Queue,removable}:{Queue:QueueType,removable:bool
   return (
   <div className='m-5 d-flex flex-column justify-content-between'>
       <h3>Instruction Queue</h3>
-      <table className='table table-striped shadow border bg-light'>
+      <table className='table table-striped shadow border bg-light table-hover'>
         <thead>
           <tr>
           <th scope="col" className='bg-light'>#</th>

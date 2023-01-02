@@ -4,6 +4,7 @@ import Execute from './Execute'
 import { cycleTableType, latencyType, logType, QueueType } from '../common/types';
 import { RegisterFile, AddReservationStations, MulReservationStations, LoadBuffers, StoreBuffers } from './Arrays';
 import STATUS from '../common/Status.enum';
+import Bus from './Bus'
 
 
 function main(
@@ -29,7 +30,13 @@ setStatus:(status:STATUS)=>void,
 cycleTable:cycleTableType[],
 setCycleTable:(cycleTableType:cycleTableType[])=>void
 ) {
+
+
+
+
     try{
+        const parser = new Parser(setDisplayLog,clockCycle);
+
     const issuer = new Issuer(setDisplayLog,clockCycle,
         latency,
         setRegisterFile,
@@ -59,13 +66,26 @@ setCycleTable:(cycleTableType:cycleTableType[])=>void
             loadBuffers,
             storeBuffers,
             memoryArray,
+            ); const bus = new Bus(setDisplayLog,clockCycle,
+            latency,
+            setRegisterFile,
+            setAddReservationStations,
+            setMulReservationStations,
+            setLoadBuffers,
+            setStoreBuffers,
+            setMemoryArray,
+            registerFile,
+            addReservationStations,
+            mulReservationStations,
+            loadBuffers,
+            storeBuffers,
+            memoryArray,
             );
-        const parser = new Parser(setDisplayLog,clockCycle);
     
-        if(instructionQueue.length()>0 && STATUS.ACTIVE){
+        if(instructionQueue.length() > 0 && STATUS.ACTIVE){ /// instruction queue still not empty
             let currentInstruction: string = instructionQueue.peek();
             setCurrentInstruction(currentInstruction);
-            const parsedInstruction = parser.parse(currentInstruction);
+            const parsedInstruction = parser.parse(currentInstruction,instructionQueue.length());
             const stallFlag=issuer.put(parsedInstruction);
             console.log('currentInstruction');
             console.log(currentInstruction);
@@ -74,13 +94,13 @@ setCycleTable:(cycleTableType:cycleTableType[])=>void
             if(!stallFlag){ // means dequeue instruction queue since there where an empty slot in the according station
                 instructionQueue.dequeue();
             }
-
         }
         else{
             setStatus(STATUS.EMPTY);
             setCurrentInstruction('');
         }
 
+        bus.broadcast(); 
         executer.executeStations();
 
     }
