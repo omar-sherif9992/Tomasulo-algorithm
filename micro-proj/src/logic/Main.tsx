@@ -1,7 +1,7 @@
 import Parser from './Parser'
 import Issuer from './Issuer';
 import Execute from './Execute'
-import { latencyType, logType, QueueType } from '../common/types';
+import { cycleTableType, latencyType, logType, QueueType } from '../common/types';
 import { RegisterFile, AddReservationStations, MulReservationStations, LoadBuffers, StoreBuffers } from './Arrays';
 import STATUS from '../common/Status.enum';
 
@@ -25,7 +25,9 @@ loadBuffers:typeof LoadBuffers,
 storeBuffers:typeof StoreBuffers,
 memoryArray:number[],
 status:STATUS,
-setStatus
+setStatus:(status:STATUS)=>void,
+cycleTable:cycleTableType[],
+setCycleTable:(cycleTableType:cycleTableType[])=>void
 ) {
     try{
     const issuer = new Issuer(setDisplayLog,clockCycle,

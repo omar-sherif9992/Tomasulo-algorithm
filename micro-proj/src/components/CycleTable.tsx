@@ -1,9 +1,9 @@
 import React from 'react'
 import { cycleTableType } from '../common/types'
 
-const CycleTable = ({cycleTable}:{
+function CycleTable  ({cycleTable}:{
     cycleTable:cycleTableType[]
-}) => {
+}) {
     return <div className='m-5 d-flex flex-column justify-content-between'>
     <h3>Add Reservation Stations</h3>
     <table className='table table-striped bg-light'>
@@ -24,8 +24,7 @@ const CycleTable = ({cycleTable}:{
               <td>{cycle.issueClockCycleNumber ===null?'-':cycle.issueClockCycleNumber }</td>
               <td>{cycle.executeStartClockCycleNumber ===null?'-':cycle.executeStartClockCycleNumber }</td>
               <td>{cycle.executeEndClockCycleNumber ===null?'-':cycle.executeEndClockCycleNumber}</td>
-              <td>{cycle.writeBackClockCycleNumber ===null?'-':cycle.writeBackClockCycleNumber}</td>
-                   
+              <td>{cycle.writeBackClockCycleNumber ===null?'-':cycle.writeBackClockCycleNumber}</td>         
           </tr>
         ))}
       </tbody>
@@ -33,4 +32,4 @@ const CycleTable = ({cycleTable}:{
   </div>;
 }
 
-export default CycleTable
+export default CycleTable;

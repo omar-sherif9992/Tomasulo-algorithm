@@ -17,6 +17,7 @@ import LoadBuffersTable from './components/LoadBuffersTable';
 import StoreBuffersTable from './components/StoreBuffersTable';
 import STATUS from './common/Status.enum';
 import Form from './components/Form';
+import CycleTable from './components/CycleTable';
 
 
 const parser = new Parser(()=>{},1);
@@ -73,7 +74,9 @@ function App() {
     storeBuffers,
     memoryArray,
     status,
-    setStatus
+    setStatus,
+    cycleTable,
+    setCycleTable
     );
 
 setClockCycle(clockCycle+1);
@@ -124,7 +127,7 @@ setClockCycle(clockCycle+1);
 <CurrentInstruction currentInstruction={currentInstruction}/>
 <InstructionQueueTable Queue={Queue} removable={false}/>
 
- 
+<CycleTable cycleTable={cycleTable}/>
 
 
 
