@@ -37,7 +37,7 @@ export type StoreBuffer = {
     name: string;
     busy: boolean;
     effectiveAddress: number | null;
-    value: number | null;
+    V: number | null;
     Q: string | null;
     timeLeft:number |null;
     registerSourceIndex:number | null;

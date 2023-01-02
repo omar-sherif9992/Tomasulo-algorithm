@@ -142,7 +142,7 @@ class Issuer {
                         name: StoreBuffers[stationSlot].name, 
                         busy: true,
                         effectiveAddress: instruction.effectiveAddress,
-                        value: RegisterFile[instruction.registerIndex].reservationStageName ? null : RegisterFile[instruction.registerIndex].value, // if the found register is reserved by reservation station then the value is null otherwise the value of the register
+                        V: RegisterFile[instruction.registerIndex].reservationStageName ? null : RegisterFile[instruction.registerIndex].value, // if the found register is reserved by reservation station then the value is null otherwise the value of the register
                         Q: RegisterFile[instruction.registerIndex].reservationStageName ? RegisterFile[instruction.registerIndex].reservationStageName : null,
                         timeLeft: this.latency[instruction.operation],
                         registerSourceIndex:instruction.registerIndex,

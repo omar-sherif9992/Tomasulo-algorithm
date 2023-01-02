@@ -31,9 +31,6 @@ cycleTable:cycleTableType[],
 setCycleTable:(cycleTableType:cycleTableType[])=>void
 ) {
 
-
-
-
     try{
         const parser = new Parser(setDisplayLog,clockCycle);
 
@@ -105,7 +102,7 @@ setCycleTable:(cycleTableType:cycleTableType[])=>void
 
     }
     catch(error){
-        alert(error.message);
+        //alert(error.message);
         console.log(error.message);
         setDisplayLog({message:error.message,clockCycle:clockCycle});
     }

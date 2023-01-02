@@ -66,7 +66,7 @@ const StoreBuffers: StoreBuffer[] = new Array(2).fill(1).map((_, i) => {
         name: 'S' + i,
         busy: false,
         effectiveAddress: null,
-        value: null, // to be saved in memory
+        V: null, // to be saved in memory
         Q: null,
         timeLeft: null,
         registerSourceIndex:null,
