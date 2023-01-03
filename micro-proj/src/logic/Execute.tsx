@@ -1,4 +1,4 @@
-import {  ArithmeticReservationStation, logType, latencyType, StoreBuffer, LoadBuffer } from '../common/types';
+import {  ArithmeticReservationStation, logType, latencyType, StoreBuffer, LoadBuffer, Register } from '../common/types';
 import { RegisterFile, AddReservationStations, MulReservationStations, LoadBuffers, StoreBuffers, printStations } from './Arrays';
 import INSTRUCTION from '../common/Instruction.enum'
 const instructionSyntaxError = 'Syntax Error Instruction';
@@ -7,35 +7,37 @@ class Execute {
     setDisplayLog: (log: logType) => void;
     clockCycle: number;
     latency: latencyType;
-    setRegisterFile: (registerFile: typeof RegisterFile) => void;
-    setAddReservationStations: (addReservationStations: typeof AddReservationStations) => void;
-    setMulReservationStations: (mulReservationStations: typeof MulReservationStations) => void;
-    setLoadBuffers: (loadBuffers: typeof LoadBuffers) => void;
-    setStoreBuffers: (storeBuffers: typeof StoreBuffers) => void;
-    setMemoryArray: (memoryArray: number[]) => void;
-    registerFile: typeof RegisterFile;
-    addReservationStations: typeof AddReservationStations;
-    mulReservationStations: typeof MulReservationStations;
-    loadBuffers: typeof LoadBuffers;
-    storeBuffers: typeof StoreBuffers;
-    memoryArray: number[]
+    setRegisterFile:(registerFile: Register[])=>void;
+    setAddReservationStations:(addReservationStations:ArithmeticReservationStation[],timeLeft:number,instructionIndex:number,issueCycle:(number|null),startExecuteCycle:(number|null),endExecute:(number|null),writeResultCycle:(number|null))=>void;
+    setMulReservationStations:(mulReservationStations:ArithmeticReservationStation[],timeLeft:number,instructionIndex:number,issueCycle:(number|null),startExecuteCycle:(number|null),endExecute:(number|null),writeResultCycle:(number|null))=>void;
+    setLoadBuffers:(loadBuffers: LoadBuffer[],timeLeft:number,instructionIndex:number,issueCycle:(number|null),startExecuteCycle:(number|null),endExecute:(number|null),writeResultCycle:(number|null))=>void;
+    setStoreBuffers:(storeBuffers:StoreBuffer[],timeLeft:number,instructionIndex:number,issueCycle:(number|null),startExecuteCycle:(number|null),endExecute:(number|null),writeResultCycle:(number|null))=>void;
+    setMemoryArray:(memoryArray:number[],timeLeft:number,instructionIndex:number,issueCycle:(number|null),startExecuteCycle:(number|null),endExecute:(number|null),writeResultCycle:(number|null))=>void;
+    registerFile:Register[];
+    addReservationStations:ArithmeticReservationStation[];
+    mulReservationStations:ArithmeticReservationStation[];
+    loadBuffers:LoadBuffer[];
+    storeBuffers: StoreBuffer[];
+    memoryArray:number[];
+    
 
     constructor(
         setDisplayLog: (log: logType) => void,
         clockCycle: number,
         latency: latencyType,
-        setRegisterFile: (registerFile: typeof RegisterFile) => void,
-        setAddReservationStations: (addReservationStations: typeof AddReservationStations) => void,
-        setMulReservationStations: (mulReservationStations: typeof MulReservationStations) => void,
-        setLoadBuffers: (loadBuffers: typeof LoadBuffers) => void,
-        setStoreBuffers: (storeBuffers: typeof StoreBuffers) => void,
-        setMemoryArray: (memoryArray: number[]) => void,
-        registerFile: typeof RegisterFile,
-        addReservationStations: typeof AddReservationStations,
-        mulReservationStations: typeof MulReservationStations,
-        loadBuffers: typeof LoadBuffers,
-        storeBuffers: typeof StoreBuffers,
-        memoryArray: number[],
+        setRegisterFile:(registerFile: Register[])=>void,
+        setAddReservationStations:(addReservationStations:ArithmeticReservationStation[],timeLeft:number,instructionIndex:number,issueCycle:(number|null),startExecuteCycle:(number|null),endExecute:(number|null),writeResultCycle:(number|null))=>void,
+        setMulReservationStations:(mulReservationStations:ArithmeticReservationStation[],timeLeft:number,instructionIndex:number,issueCycle:(number|null),startExecuteCycle:(number|null),endExecute:(number|null),writeResultCycle:(number|null))=>void,
+        setLoadBuffers:(loadBuffers: LoadBuffer[],timeLeft:number,instructionIndex:number,issueCycle:(number|null),startExecuteCycle:(number|null),endExecute:(number|null),writeResultCycle:(number|null))=>void,
+        setStoreBuffers:(storeBuffers:StoreBuffer[],timeLeft:number,instructionIndex:number,issueCycle:(number|null),startExecuteCycle:(number|null),endExecute:(number|null),writeResultCycle:(number|null))=>void,
+        setMemoryArray:(memoryArray:number[],timeLeft:number,instructionIndex:number,issueCycle:(number|null),startExecuteCycle:(number|null),endExecute:(number|null),writeResultCycle:(number|null))=>void,
+        registerFile:Register[],
+        addReservationStations:ArithmeticReservationStation[],
+        mulReservationStations:ArithmeticReservationStation[],
+        loadBuffers:LoadBuffer[],
+        storeBuffers: StoreBuffer[],
+        memoryArray:number[],
+        
     ) {
 
         this.setDisplayLog = setDisplayLog;
@@ -57,7 +59,7 @@ class Execute {
    
  
 
-    executeInstruction(instruction: ArithmeticReservationStation | LoadBuffer | StoreBuffer):number {
+   async executeInstruction(instruction: ArithmeticReservationStation | LoadBuffer | StoreBuffer):Promise<number> {
         switch (instruction.op) {
             case INSTRUCTION.ADD:
                return this.executeAdd(instruction as ArithmeticReservationStation);
@@ -76,7 +78,7 @@ class Execute {
                return this.executeStore(instruction as StoreBuffer);
                
             default:
-                this.setDisplayLog({ message: instructionSyntaxError, clockCycle: this.clockCycle });
+             await   this.setDisplayLog({ message: instructionSyntaxError, clockCycle: this.clockCycle });
                 break;
         }
     
@@ -84,7 +86,7 @@ class Execute {
 
  
 
-    executeAdd(instruction: ArithmeticReservationStation):number {
+   async executeAdd(instruction: ArithmeticReservationStation):Promise<number> {
         const {  registerDestinationIndex,Vk, Vj } = instruction;
         if(registerDestinationIndex && Vj && Vk){
         const source1Value = Vj;
@@ -92,12 +94,12 @@ class Execute {
         const result = source1Value + source2Value;
   /*       this.registerFile[registerDestinationIndex].value = result;
         this.setRegisterFile(this.registerFile); */
-        this.setDisplayLog({ message: `ADD.D F${registerDestinationIndex}=${source1Value} +${source2Value}`, clockCycle: this.clockCycle });
+    await    this.setDisplayLog({ message: `ADD.D F${registerDestinationIndex}=${source1Value} +${source2Value}`, clockCycle: this.clockCycle });
         return result;
     }
     }
 
-    executeSub(instruction: ArithmeticReservationStation):number {
+  async  executeSub(instruction: ArithmeticReservationStation):Promise<number> {
         const {  registerDestinationIndex,Vk, Vj } = instruction;
         if(registerDestinationIndex && Vj && Vk){
         const source1Value = Vj;
@@ -105,12 +107,12 @@ class Execute {
         const result = source1Value - source2Value;
      /*    this.registerFile[registerDestinationIndex].value = result;
         this.setRegisterFile(this.registerFile); */
-        this.setDisplayLog({ message: `SUB.D F${registerDestinationIndex}=${source1Value}-${source2Value}`, clockCycle: this.clockCycle });
+   await     this.setDisplayLog({ message: `SUB.D F${registerDestinationIndex}=${source1Value}-${source2Value}`, clockCycle: this.clockCycle });
         return result;
     }
     }
 
-    executeMul(instruction: ArithmeticReservationStation) {
+  async  executeMul(instruction: ArithmeticReservationStation) {
         const {  registerDestinationIndex,Vk, Vj } = instruction;
         if(registerDestinationIndex && Vj && Vk){
         const source1Value = Vj;
@@ -119,12 +121,12 @@ class Execute {
    /*      const newRegisterFile = [...this.registerFile];
         newRegisterFile[registerDestinationIndex].value = result;
         this.setRegisterFile(newRegisterFile); */
-        this.setDisplayLog({ message: `MUL.D F${registerDestinationIndex}=${Vj}*${Vk}`, clockCycle: this.clockCycle });
+   await     this.setDisplayLog({ message: `MUL.D F${registerDestinationIndex}=${Vj}*${Vk}`, clockCycle: this.clockCycle });
         return result;
         }
     }
 
-    executeDiv(instruction: ArithmeticReservationStation) {
+  async  executeDiv(instruction: ArithmeticReservationStation) {
         const { registerDestinationIndex, Vj, Vk } = instruction;
         if(registerDestinationIndex && Vj && Vk){
         const source1Value = Vj;
@@ -133,12 +135,12 @@ class Execute {
 /*         const newRegisterFile = [...this.registerFile];
         newRegisterFile[registerDestinationIndex].value = result;
         this.setRegisterFile(newRegisterFile); */
-        this.setDisplayLog({ message: `DIV.D F${registerDestinationIndex}=${Vj}/${Vk}`, clockCycle: this.clockCycle });
+   await     this.setDisplayLog({ message: `DIV.D F${registerDestinationIndex}=${Vj}/${Vk}`, clockCycle: this.clockCycle });
         return result;
         }
     }
 
-    executeLoad(instruction: LoadBuffer) {
+    async executeLoad(instruction: LoadBuffer) {
         const { effectiveAddress, registerDestinationIndex } = instruction;
         if(effectiveAddress && registerDestinationIndex){
         const memoryValue = this.memoryArray[effectiveAddress];
@@ -146,111 +148,109 @@ class Execute {
     /*     const newRegisterFile = [...this.registerFile];
         newRegisterFile[registerDestinationIndex].value = memoryValue;
         this.setRegisterFile(newRegisterFile); */
-        this.setDisplayLog({ message: `LD.D F${registerDestinationIndex} from  M[${effectiveAddress}]`, clockCycle: this.clockCycle });
+     await   this.setDisplayLog({ message: `LD.D F${registerDestinationIndex} from  M[${effectiveAddress}]`, clockCycle: this.clockCycle });
 
         return memoryValue;
         }
     }
 
-    executeStore(instruction: StoreBuffer) {
+   async executeStore(instruction: StoreBuffer) {
         const { effectiveAddress, registerSourceIndex } = instruction;
         if(registerSourceIndex && effectiveAddress){
         const registerSource = this.registerFile[registerSourceIndex];
     /*     const newMemory=[...this.memoryArray];
         newMemory[effectiveAddress] = registerSource.value;
         this.setMemoryArray(newMemory); */
-        this.setDisplayLog({ message: `SD.D  ${registerSource.name} stored in M[${effectiveAddress}] is executed`, clockCycle: this.clockCycle });
+      await  this.setDisplayLog({ message: `SD.D  ${registerSource.name} stored in M[${effectiveAddress}] is executed`, clockCycle: this.clockCycle });
         return  registerSource.value;
     }
     }
 
-    executeStations() { // execute all stations
-        this.executeAddReservationStations();
-        this.executeMulReservationStations();
-        this.executeLoadBuffers();
-        this.executeStoreBuffers();
+   async executeStations() { // execute all stations
+        await this.executeAddReservationStations();
+        await this.executeMulReservationStations();
+        await this.executeLoadBuffers();
+        await this.executeStoreBuffers();
     }
 
-    executeAddReservationStations() {
-        this.addReservationStations.forEach((station, index) => {
+   async executeAddReservationStations() {
+        await this.addReservationStations.forEach(async (station, index) => {
             
             if (station.busy && station.timeLeft === 1) { // if station is busy and last cycle for it we execute and save the result to writeback when FIFO
-               const registerDestinationValue=  this.executeInstruction(station); // value expected to be written in the write back
-     
+               const registerDestinationValue=  await this.executeInstruction(station); // value expected to be written in the write back
+                console.log('registerDestinationValue');
+                console.log(registerDestinationValue);
                 // deep cloning for react state
-                const newAddReservationStations=[...this.addReservationStations];
-                newAddReservationStations[index] = {
-               ...newAddReservationStations[index],
+                this.addReservationStations[index] = {
+               ...this.addReservationStations[index],
                     registerDestinationValue,
-                    timeLeft:station.timeLeft-- // decrement to write back at next cycle
+                    timeLeft:0 // decrement to write back at next cycle
                 };
-                this.setAddReservationStations(newAddReservationStations); 
+              await  this.setAddReservationStations(this.addReservationStations,this.addReservationStations[index].timeLeft,this.addReservationStations[index].instructionIndex,null,null,this.clockCycle,null); 
 
             } else if (station.busy && station.Vj && station.Vk && station.timeLeft >1 ) { // till the 2 operands are filled with the correct value
-                const newAddReservationStations=[...this.addReservationStations];
-                newAddReservationStations[index].timeLeft!--;
-                this.setAddReservationStations(newAddReservationStations);
+                this.addReservationStations[index].timeLeft!--;
+                await  this.setAddReservationStations(this.addReservationStations,this.addReservationStations[index].timeLeft,this.addReservationStations[index].instructionIndex,null,this.clockCycle,null,null); 
             }
         });
     }
 
-    executeMulReservationStations() {
-        this.mulReservationStations.forEach((station, index) => {
+   async executeMulReservationStations() {
+       await this.mulReservationStations.forEach(async(station, index) => {
             if (station.busy && station.timeLeft === 1) {
-                const registerDestinationValue=this.executeInstruction(station);
-                const newMulReservationStations=[...this.mulReservationStations];
-                newMulReservationStations[index] = {
-                    ...newMulReservationStations[index],
+                const registerDestinationValue=await this.executeInstruction(station);
+                this.mulReservationStations[index] = {
+                    ...this.mulReservationStations[index],
                     registerDestinationValue,
-                    timeLeft:station.timeLeft-- // decrement to write back at next cycle
+                    timeLeft:0 // decrement to write back at next cycle
                 };
-                this.setMulReservationStations(newMulReservationStations);
+
+                await  this.setMulReservationStations(this.mulReservationStations,this.mulReservationStations[index].timeLeft,this.mulReservationStations[index].instructionIndex,null,null,this.clockCycle,null); 
+
             } else if (station.busy && station.Vj && station.Vk && station.timeLeft >1 ) {// till the 2 operands are filled with the correct value
-                const newMulReservationStations=[...this.mulReservationStations];
-                newMulReservationStations[index].timeLeft!--;
-                this.setMulReservationStations(newMulReservationStations);
+                this.mulReservationStations[index].timeLeft!--;
+                await  this.setMulReservationStations(this.mulReservationStations,this.mulReservationStations[index].timeLeft,this.mulReservationStations[index].instructionIndex,null,this.clockCycle,null,null); 
             }
         });
     }
 
-    executeLoadBuffers() {
-        this.loadBuffers.forEach((buffer, index) => {
+    async executeLoadBuffers() {
+       await this.loadBuffers.forEach(async(buffer, index) => {
             // TODO: We need to check here if multiple writes will occur what will occur
             if (buffer.busy && buffer.timeLeft === 1) {
-              const  registerDestinationValue =this.executeInstruction(buffer);
-                const newLoadBuffers=[...this.loadBuffers];
-                newLoadBuffers[index] = {
-                    ...newLoadBuffers[index],
+              const  registerDestinationValue =await this.executeInstruction(buffer);
+                this.loadBuffers[index] = {
+                    ...this.loadBuffers[index],
                     registerDestinationValue,
-                    timeLeft:buffer.timeLeft-- // decrement to write back at next cycle
+                    timeLeft:0 // decrement to write back at next cycle
 
                 };
-                this.setLoadBuffers(this.loadBuffers);
+                await  this.setLoadBuffers(this.loadBuffers,this.loadBuffers[index].timeLeft,this.loadBuffers[index].instructionIndex,null,null,this.clockCycle,null); 
+
             } else if (buffer.busy && buffer.registerDestinationIndex && buffer.timeLeft >1) {
-                const newLoadBuffers=[...this.loadBuffers];
-                newLoadBuffers[index].timeLeft!--;
-                this.setLoadBuffers(newLoadBuffers);
+                this.loadBuffers[index].timeLeft!--;
+                await  this.setLoadBuffers(this.loadBuffers,this.loadBuffers[index].timeLeft,this.loadBuffers[index].instructionIndex,null,this.clockCycle,null,null); 
+
             }
         });
     }
 
-    executeStoreBuffers() {
-        this.storeBuffers.forEach((buffer, index) => {
+   async executeStoreBuffers() {
+        this.storeBuffers.forEach(async(buffer, index) => {
             // TODO: We need to check here if multiple writes will occur what will occur
             if (buffer.busy && buffer.timeLeft === 1) {
-            const registerDestinationValue=    this.executeInstruction(buffer);
-                const newStoreBuffers=[...this.storeBuffers]
-                newStoreBuffers[index] = {
-                    ...newStoreBuffers[index],
+            const registerDestinationValue= await   this.executeInstruction(buffer);
+            this.storeBuffers[index] = {
+                    ...this.storeBuffers[index],
                     registerDestinationValue,
-                    timeLeft:buffer.timeLeft-- // decrement to write back at next cycle
+                    timeLeft:0 // decrement to write back at next cycle
                 };
+                await  this.setStoreBuffers(this.storeBuffers,this.storeBuffers[index].timeLeft,this.storeBuffers[index].instructionIndex,null,null,this.clockCycle,null); 
 
-                this.setStoreBuffers(newStoreBuffers);
             } else if (buffer.busy && buffer.registerSourceIndex && buffer.timeLeft >1) {
-                const newStoreBuffers=[...this.storeBuffers];
-                newStoreBuffers[index].timeLeft--;
-                this.setStoreBuffers(newStoreBuffers);
+                this.storeBuffers[index].timeLeft--;
+                await  this.setStoreBuffers(this.storeBuffers,this.storeBuffers[index].timeLeft,this.storeBuffers[index].instructionIndex,null,this.clockCycle,null,null); 
+
             }
         });
     }

@@ -1,1 +1,121 @@
-# Tomosolu
+## Tomasulo algorithim 
+
+### 1. Introduction
+- Tomasulo's algorithm is a computer architecture hardware algorithm for dynamic scheduling of instructions that allows out-of-order execution and enables more efficient use of multiple execution units. It was developed by John E. Tomasulo in 1967. The algorithm is named after him. The algorithm is used in modern superscalar processors to increase the number of instructions executed per clock cycle. It is a form of dynamic scheduling, which means that the instructions are not scheduled in the order in which they appear in the program. Instead, the instructions are scheduled dynamically, based on the availability of the execution units and the operands. The algorithm is also known as the reservation station algorithm.
+
+### 2. Approach
+- We have done 2 projects one Java with CLI  and React with UI using typescript
+- assumptions :
+  - we don't handle the clashes of the same effective address .
+  - we can do multiple load and store at the same time and the same effective address as the professor said.
+  - when 2 instructions write back at the same time we give the priority to the instruction according to FIFO.
+  - Reservation Stages and buffers size are dynamic depending on the input.
+  - Latencies are dynamic depending on the user input.
+  - Memory dynamic depending on the user input.
+  - Float Register size is 32 as like Tomasulo.
+
+### 3. Code structure
+
+<img src='./screenshots/CodeStructure.png'/>
+
+
+- The code is divided into 7 main classes:
+  - Load Buffer
+  - Store Buffer
+  - Reservation  
+  - Instruction: which is the class that represents the instruction and it's attributes.
+    - InstructionType: which is the Enum that represents the instruction type.
+    -  Arithmetic Instruction:
+       -  source1: source register1 index
+       -  source2: source register2 index
+       -  destination: source register2 index
+       -  effective address : null
+    -  Memory Instruction:
+       - Store :
+         - source1: source register1 index
+         -  source2: null
+         -  destination : null
+         -  effective address : index in the memory
+       - Load :  
+            - source1: null
+            -  source2: null
+            -  destination : index of th register
+            -  effective address : index in the memory
+
+  - Register: 
+    - name
+	- value
+	- Q 
+  
+  - Main: 
+    - clockcycle 
+    - instructionQueu:Queue[Instruction]
+    - issuedStation : to gurantee the instruction that is issued dont execute in the same cycle
+    - add reservation station : ReservationStation[]
+    - mul reservation station:ReservationStation[]
+  	- LoadBuffer[] loadBuffers;
+	- StoreBuffer[] storeBuffers; 
+	- Register[] regFile;
+
+    - Sequence:
+      - 1. fill the instruction queue by the user input from file we parse each instruction independently then add to instruction queue .
+      - 2.  fill the latencies by the user input .      
+      
+      -  3.  Intialize the reservation stations.
+      -  4. Issue an instr
+      - 5. execute functions :
+        - ExecuteALUInstruction(addReservationStations);
+  		- ExecuteALUInstruction(mulReservationStations);
+  		- ExecuteLoadInstruction(loadBuffers);
+  		- ExecuteStoreInstruction(storeBuffers);
+      - 6. write back function :
+        - store always is able to write back 
+        - based on FIFO with instruction Queue we write back the first finished instruction
+        -  we update the stations based on the write back 
+        -  we empty the station that wrote back and make it un busy 
+  
+
+    
+
+
+
+### 4. Test Cases
+
+#### 1.1. Test Case 1
+- Instructions Assembly:
+
+```
+L.D F10,100
+MUL.D F12,F7,F13
+ADD.D F5,F6,F11
+DIV.D F6,F5,F2
+SUB.D F4,F8,F9
+S.D F20,50
+```
+
+
+
+
+#### 1.2. Test Case 2
+
+- Instructions Assembly:
+
+```
+S.D F6, 90
+L.D F6, 120
+ADD.D F7, F6, F5
+MUL.D F6, F1, F2
+DIV.D F7, F7, F2
+S.D F7, 150
+SUB.D F10,F7,F1
+```
+
+- Latencies:
+```
+latencyADD=3;
+latencySUB=3;
+latencyMUL=4;
+latencyDIV=5;
+latencyLOAD=5;
+latencySTORE=1;
+```

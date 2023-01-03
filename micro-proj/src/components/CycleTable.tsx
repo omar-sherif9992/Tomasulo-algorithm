@@ -21,10 +21,10 @@ function CycleTable  ({cycleTable}:{
         {cycleTable.map((cycle, index) => (
           <tr key={index+232*32312}>
               <td>{cycle.instruction ===null?'-':cycle.instruction}</td>
-              <td>{cycle.issueClockCycleNumber ===null?'-':cycle.issueClockCycleNumber }</td>
-              <td>{cycle.executeStartClockCycleNumber ===null?'-':cycle.executeStartClockCycleNumber }</td>
-              <td>{cycle.executeEndClockCycleNumber ===null?'-':cycle.executeEndClockCycleNumber}</td>
-              <td>{cycle.writeBackClockCycleNumber ===null?'-':cycle.writeBackClockCycleNumber}</td>         
+              <td>{cycle.issueCycle ===null?'-':cycle.issueCycle }</td>
+              <td>{cycle.startExecuteCycle ===null?'-':cycle.startExecuteCycle }</td>
+              <td>{cycle.endExecute ===null?'-':cycle.endExecute}</td>
+              <td>{cycle.writeResultCycle ===null?'-':cycle.writeResultCycle}</td>         
           </tr>
         ))}
       </tbody>

@@ -25,7 +25,7 @@ class Parser {
 
     }
     // parses the input to a MemoryInstruction or ArithmeticInstruction object
-    parse(input: string,instructionIndex:number): MemoryInstruction | ArithmeticInstruction {
+     parse(input: string,instructionIndex:number): MemoryInstruction | ArithmeticInstruction {
         console.log('input');
         console.log(input);
 
@@ -42,6 +42,7 @@ class Parser {
                 registerIndex: parseInt(register.substring(1)), // the register have index of register in register file
                 effectiveAddress: parseInt(effectiveAddress), // its place in the memory,
                 instructionIndex,
+                instructionString:input,
             } as MemoryInstruction;
         }
 
@@ -56,6 +57,7 @@ class Parser {
             source1Index: parseInt(source1.substring(1)), // the source 1 register have index of register in register file
             source2Index: parseInt(source2.substring(1)), // the source 2 register have index of register in register file
             instructionIndex,
+            instructionString:input,
         } as ArithmeticInstruction;
 
     }}

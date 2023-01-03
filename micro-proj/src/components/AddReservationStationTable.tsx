@@ -25,7 +25,7 @@ function AddReservationStationsTable({addReservationStations}:{addReservationSta
             <tr key={index+232*32312}>
                 <td>{station.timeLeft ===null?'-':station.timeLeft}</td>
                 <td>{station.busy === true?'1':'0'}</td>
-                <td>{station.name}</td>
+                <td>{station.name === null?'-':station.name}</td>
                 <td>{station.op ===null?'-':station.op}</td>
                 <td>{station.Vj ===null?'-':station.Vj}</td>
                 <td>{station.Vk ===null?'-':station.Vk}</td>

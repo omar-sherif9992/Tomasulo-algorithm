@@ -31,5 +31,5 @@
     "typeRoots": ["node_modules/@types"]
   },
   "exclude": ["node_modules", "src/http", "src/logs"],
-  "include": ["src/**/*.ts", "src/**/*.json", ".env", "swagger.ts", "swagger.ts", "src/logic/Main.tsx", "src/logic/Main.tsx", "src/logic/Arrays.tsx", "src/logic/Arrays.tsx"]
+  "include": ["src/**/*.ts", "src/**/*.json", ".env", "swagger.ts", "swagger.ts", "src/logic/Main.tsx", "src/logic/Main.tsx", "src/logic/Arrays.tsx", "src/logic/Arrays.tsx", "src/logic/Issuer.tsx", "src/logic/Issuer.tsx", "src/logic/Parser.tsx", "src/logic/Parser.tsx"]
 }
