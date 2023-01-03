@@ -18,6 +18,7 @@ latencyLOAD=5;
 latencySTORE=1;
 ```
 
+
 Clock Cycle 1
 ------------------------------------
 ------------------------------------
@@ -275,7 +276,7 @@ Logs
 Station A0 finished execution and output is 17.0
 Station A1 is currently executing
 Station M0 finished execution and output is 91.0
-Buffer L0 finished execution and output is 15.0
+Buffer L0 finished execution and output is 100.0
 
 Clock Cycle 7
 ------------------------------------
@@ -313,13 +314,13 @@ Time| name | Busy  |  V  |  Q   | effectiveAddress
 
 Register File
 ------------------------------------
-[(F0= 0.0, null), (F1= 1.0, null), (F2= 2.0, null), (F3= 3.0, null), (F4= 4.0, A1), (F5= 5.0, A0), (F6= 6.0, M1), (F7= 7.0, null), (F8= 8.0, null), (F9= 9.0, null), (F10= 15.0, null), (F11= 11.0, null), (F12= 12.0, M0), (F13= 13.0, null), (F14= 14.0, null), (F15= 15.0, null), (F16= 16.0, null), (F17= 17.0, null), (F18= 18.0, null), (F19= 19.0, null), (F20= 20.0, null), (F21= 21.0, null), (F22= 22.0, null), (F23= 23.0, null), (F24= 24.0, null), (F25= 25.0, null), (F26= 26.0, null), (F27= 27.0, null), (F28= 28.0, null), (F29= 29.0, null), (F30= 30.0, null), (F31= 31.0, null)]
+[(F0= 0.0, null), (F1= 1.0, null), (F2= 2.0, null), (F3= 3.0, null), (F4= 4.0, A1), (F5= 5.0, A0), (F6= 6.0, M1), (F7= 7.0, null), (F8= 8.0, null), (F9= 9.0, null), (F10= 100.0, null), (F11= 11.0, null), (F12= 12.0, M0), (F13= 13.0, null), (F14= 14.0, null), (F15= 15.0, null), (F16= 16.0, null), (F17= 17.0, null), (F18= 18.0, null), (F19= 19.0, null), (F20= 20.0, null), (F21= 21.0, null), (F22= 22.0, null), (F23= 23.0, null), (F24= 24.0, null), (F25= 25.0, null), (F26= 26.0, null), (F27= 27.0, null), (F28= 28.0, null), (F29= 29.0, null), (F30= 30.0, null), (F31= 31.0, null)]
 
 Logs
 ------------------------------------
 Station A1 is currently executing
 Buffer S0 finished execution and has saved in the memory location 50 value= 20.0
-Load Buffer L0 has written 15.0 on the bus and is emptied out
+Load Buffer L0 has written 100.0 on the bus and is emptied out
 
 Clock Cycle 8
 ------------------------------------
@@ -357,7 +358,7 @@ Time| name | Busy  |  V  |  Q   | effectiveAddress
 
 Register File
 ------------------------------------
-[(F0= 0.0, null), (F1= 1.0, null), (F2= 2.0, null), (F3= 3.0, null), (F4= 4.0, A1), (F5= 5.0, A0), (F6= 6.0, M1), (F7= 7.0, null), (F8= 8.0, null), (F9= 9.0, null), (F10= 15.0, null), (F11= 11.0, null), (F12= 91.0, null), (F13= 13.0, null), (F14= 14.0, null), (F15= 15.0, null), (F16= 16.0, null), (F17= 17.0, null), (F18= 18.0, null), (F19= 19.0, null), (F20= 20.0, null), (F21= 21.0, null), (F22= 22.0, null), (F23= 23.0, null), (F24= 24.0, null), (F25= 25.0, null), (F26= 26.0, null), (F27= 27.0, null), (F28= 28.0, null), (F29= 29.0, null), (F30= 30.0, null), (F31= 31.0, null)]
+[(F0= 0.0, null), (F1= 1.0, null), (F2= 2.0, null), (F3= 3.0, null), (F4= 4.0, A1), (F5= 5.0, A0), (F6= 6.0, M1), (F7= 7.0, null), (F8= 8.0, null), (F9= 9.0, null), (F10= 100.0, null), (F11= 11.0, null), (F12= 91.0, null), (F13= 13.0, null), (F14= 14.0, null), (F15= 15.0, null), (F16= 16.0, null), (F17= 17.0, null), (F18= 18.0, null), (F19= 19.0, null), (F20= 20.0, null), (F21= 21.0, null), (F22= 22.0, null), (F23= 23.0, null), (F24= 24.0, null), (F25= 25.0, null), (F26= 26.0, null), (F27= 27.0, null), (F28= 28.0, null), (F29= 29.0, null), (F30= 30.0, null), (F31= 31.0, null)]
 
 Logs
 ------------------------------------
@@ -385,7 +386,7 @@ MUL Reservation Station
 ------------------------------------
 Time| name | Type | Busy  | Vj  | Vk  | Qj   | Qk
 0   |  M0  | null | false | 0.0 | 0.0 | null | null | 
-5   |  M1  | DIV  | true  | 0.0 | 2.0 | A0 | null | 
+5   |  M1  | DIV  | true  | 17.0 | 2.0 | null | null | 
 
 Load Buffers
 ------------------------------------
@@ -401,7 +402,7 @@ Time| name | Busy  |  V  |  Q   | effectiveAddress
 
 Register File
 ------------------------------------
-[(F0= 0.0, null), (F1= 1.0, null), (F2= 2.0, null), (F3= 3.0, null), (F4= 4.0, A1), (F5= 17.0, null), (F6= 6.0, M1), (F7= 7.0, null), (F8= 8.0, null), (F9= 9.0, null), (F10= 15.0, null), (F11= 11.0, null), (F12= 91.0, null), (F13= 13.0, null), (F14= 14.0, null), (F15= 15.0, null), (F16= 16.0, null), (F17= 17.0, null), (F18= 18.0, null), (F19= 19.0, null), (F20= 20.0, null), (F21= 21.0, null), (F22= 22.0, null), (F23= 23.0, null), (F24= 24.0, null), (F25= 25.0, null), (F26= 26.0, null), (F27= 27.0, null), (F28= 28.0, null), (F29= 29.0, null), (F30= 30.0, null), (F31= 31.0, null)]
+[(F0= 0.0, null), (F1= 1.0, null), (F2= 2.0, null), (F3= 3.0, null), (F4= 4.0, A1), (F5= 17.0, null), (F6= 6.0, M1), (F7= 7.0, null), (F8= 8.0, null), (F9= 9.0, null), (F10= 100.0, null), (F11= 11.0, null), (F12= 91.0, null), (F13= 13.0, null), (F14= 14.0, null), (F15= 15.0, null), (F16= 16.0, null), (F17= 17.0, null), (F18= 18.0, null), (F19= 19.0, null), (F20= 20.0, null), (F21= 21.0, null), (F22= 22.0, null), (F23= 23.0, null), (F24= 24.0, null), (F25= 25.0, null), (F26= 26.0, null), (F27= 27.0, null), (F28= 28.0, null), (F29= 29.0, null), (F30= 30.0, null), (F31= 31.0, null)]
 
 Logs
 ------------------------------------
@@ -443,7 +444,7 @@ Time| name | Busy  |  V  |  Q   | effectiveAddress
 
 Register File
 ------------------------------------
-[(F0= 0.0, null), (F1= 1.0, null), (F2= 2.0, null), (F3= 3.0, null), (F4= -1.0, null), (F5= 17.0, null), (F6= 6.0, M1), (F7= 7.0, null), (F8= 8.0, null), (F9= 9.0, null), (F10= 15.0, null), (F11= 11.0, null), (F12= 91.0, null), (F13= 13.0, null), (F14= 14.0, null), (F15= 15.0, null), (F16= 16.0, null), (F17= 17.0, null), (F18= 18.0, null), (F19= 19.0, null), (F20= 20.0, null), (F21= 21.0, null), (F22= 22.0, null), (F23= 23.0, null), (F24= 24.0, null), (F25= 25.0, null), (F26= 26.0, null), (F27= 27.0, null), (F28= 28.0, null), (F29= 29.0, null), (F30= 30.0, null), (F31= 31.0, null)]
+[(F0= 0.0, null), (F1= 1.0, null), (F2= 2.0, null), (F3= 3.0, null), (F4= -1.0, null), (F5= 17.0, null), (F6= 6.0, M1), (F7= 7.0, null), (F8= 8.0, null), (F9= 9.0, null), (F10= 100.0, null), (F11= 11.0, null), (F12= 91.0, null), (F13= 13.0, null), (F14= 14.0, null), (F15= 15.0, null), (F16= 16.0, null), (F17= 17.0, null), (F18= 18.0, null), (F19= 19.0, null), (F20= 20.0, null), (F21= 21.0, null), (F22= 22.0, null), (F23= 23.0, null), (F24= 24.0, null), (F25= 25.0, null), (F26= 26.0, null), (F27= 27.0, null), (F28= 28.0, null), (F29= 29.0, null), (F30= 30.0, null), (F31= 31.0, null)]
 
 Logs
 ------------------------------------
@@ -486,7 +487,7 @@ Time| name | Busy  |  V  |  Q   | effectiveAddress
 
 Register File
 ------------------------------------
-[(F0= 0.0, null), (F1= 1.0, null), (F2= 2.0, null), (F3= 3.0, null), (F4= -1.0, null), (F5= 17.0, null), (F6= 6.0, M1), (F7= 7.0, null), (F8= 8.0, null), (F9= 9.0, null), (F10= 15.0, null), (F11= 11.0, null), (F12= 91.0, null), (F13= 13.0, null), (F14= 14.0, null), (F15= 15.0, null), (F16= 16.0, null), (F17= 17.0, null), (F18= 18.0, null), (F19= 19.0, null), (F20= 20.0, null), (F21= 21.0, null), (F22= 22.0, null), (F23= 23.0, null), (F24= 24.0, null), (F25= 25.0, null), (F26= 26.0, null), (F27= 27.0, null), (F28= 28.0, null), (F29= 29.0, null), (F30= 30.0, null), (F31= 31.0, null)]
+[(F0= 0.0, null), (F1= 1.0, null), (F2= 2.0, null), (F3= 3.0, null), (F4= -1.0, null), (F5= 17.0, null), (F6= 6.0, M1), (F7= 7.0, null), (F8= 8.0, null), (F9= 9.0, null), (F10= 100.0, null), (F11= 11.0, null), (F12= 91.0, null), (F13= 13.0, null), (F14= 14.0, null), (F15= 15.0, null), (F16= 16.0, null), (F17= 17.0, null), (F18= 18.0, null), (F19= 19.0, null), (F20= 20.0, null), (F21= 21.0, null), (F22= 22.0, null), (F23= 23.0, null), (F24= 24.0, null), (F25= 25.0, null), (F26= 26.0, null), (F27= 27.0, null), (F28= 28.0, null), (F29= 29.0, null), (F30= 30.0, null), (F31= 31.0, null)]
 
 Logs
 ------------------------------------
@@ -528,7 +529,7 @@ Time| name | Busy  |  V  |  Q   | effectiveAddress
 
 Register File
 ------------------------------------
-[(F0= 0.0, null), (F1= 1.0, null), (F2= 2.0, null), (F3= 3.0, null), (F4= -1.0, null), (F5= 17.0, null), (F6= 6.0, M1), (F7= 7.0, null), (F8= 8.0, null), (F9= 9.0, null), (F10= 15.0, null), (F11= 11.0, null), (F12= 91.0, null), (F13= 13.0, null), (F14= 14.0, null), (F15= 15.0, null), (F16= 16.0, null), (F17= 17.0, null), (F18= 18.0, null), (F19= 19.0, null), (F20= 20.0, null), (F21= 21.0, null), (F22= 22.0, null), (F23= 23.0, null), (F24= 24.0, null), (F25= 25.0, null), (F26= 26.0, null), (F27= 27.0, null), (F28= 28.0, null), (F29= 29.0, null), (F30= 30.0, null), (F31= 31.0, null)]
+[(F0= 0.0, null), (F1= 1.0, null), (F2= 2.0, null), (F3= 3.0, null), (F4= -1.0, null), (F5= 17.0, null), (F6= 6.0, M1), (F7= 7.0, null), (F8= 8.0, null), (F9= 9.0, null), (F10= 100.0, null), (F11= 11.0, null), (F12= 91.0, null), (F13= 13.0, null), (F14= 14.0, null), (F15= 15.0, null), (F16= 16.0, null), (F17= 17.0, null), (F18= 18.0, null), (F19= 19.0, null), (F20= 20.0, null), (F21= 21.0, null), (F22= 22.0, null), (F23= 23.0, null), (F24= 24.0, null), (F25= 25.0, null), (F26= 26.0, null), (F27= 27.0, null), (F28= 28.0, null), (F29= 29.0, null), (F30= 30.0, null), (F31= 31.0, null)]
 
 Logs
 ------------------------------------
@@ -570,7 +571,7 @@ Time| name | Busy  |  V  |  Q   | effectiveAddress
 
 Register File
 ------------------------------------
-[(F0= 0.0, null), (F1= 1.0, null), (F2= 2.0, null), (F3= 3.0, null), (F4= -1.0, null), (F5= 17.0, null), (F6= 6.0, M1), (F7= 7.0, null), (F8= 8.0, null), (F9= 9.0, null), (F10= 15.0, null), (F11= 11.0, null), (F12= 91.0, null), (F13= 13.0, null), (F14= 14.0, null), (F15= 15.0, null), (F16= 16.0, null), (F17= 17.0, null), (F18= 18.0, null), (F19= 19.0, null), (F20= 20.0, null), (F21= 21.0, null), (F22= 22.0, null), (F23= 23.0, null), (F24= 24.0, null), (F25= 25.0, null), (F26= 26.0, null), (F27= 27.0, null), (F28= 28.0, null), (F29= 29.0, null), (F30= 30.0, null), (F31= 31.0, null)]
+[(F0= 0.0, null), (F1= 1.0, null), (F2= 2.0, null), (F3= 3.0, null), (F4= -1.0, null), (F5= 17.0, null), (F6= 6.0, M1), (F7= 7.0, null), (F8= 8.0, null), (F9= 9.0, null), (F10= 100.0, null), (F11= 11.0, null), (F12= 91.0, null), (F13= 13.0, null), (F14= 14.0, null), (F15= 15.0, null), (F16= 16.0, null), (F17= 17.0, null), (F18= 18.0, null), (F19= 19.0, null), (F20= 20.0, null), (F21= 21.0, null), (F22= 22.0, null), (F23= 23.0, null), (F24= 24.0, null), (F25= 25.0, null), (F26= 26.0, null), (F27= 27.0, null), (F28= 28.0, null), (F29= 29.0, null), (F30= 30.0, null), (F31= 31.0, null)]
 
 Logs
 ------------------------------------
@@ -612,7 +613,7 @@ Time| name | Busy  |  V  |  Q   | effectiveAddress
 
 Register File
 ------------------------------------
-[(F0= 0.0, null), (F1= 1.0, null), (F2= 2.0, null), (F3= 3.0, null), (F4= -1.0, null), (F5= 17.0, null), (F6= 6.0, M1), (F7= 7.0, null), (F8= 8.0, null), (F9= 9.0, null), (F10= 15.0, null), (F11= 11.0, null), (F12= 91.0, null), (F13= 13.0, null), (F14= 14.0, null), (F15= 15.0, null), (F16= 16.0, null), (F17= 17.0, null), (F18= 18.0, null), (F19= 19.0, null), (F20= 20.0, null), (F21= 21.0, null), (F22= 22.0, null), (F23= 23.0, null), (F24= 24.0, null), (F25= 25.0, null), (F26= 26.0, null), (F27= 27.0, null), (F28= 28.0, null), (F29= 29.0, null), (F30= 30.0, null), (F31= 31.0, null)]
+[(F0= 0.0, null), (F1= 1.0, null), (F2= 2.0, null), (F3= 3.0, null), (F4= -1.0, null), (F5= 17.0, null), (F6= 6.0, M1), (F7= 7.0, null), (F8= 8.0, null), (F9= 9.0, null), (F10= 100.0, null), (F11= 11.0, null), (F12= 91.0, null), (F13= 13.0, null), (F14= 14.0, null), (F15= 15.0, null), (F16= 16.0, null), (F17= 17.0, null), (F18= 18.0, null), (F19= 19.0, null), (F20= 20.0, null), (F21= 21.0, null), (F22= 22.0, null), (F23= 23.0, null), (F24= 24.0, null), (F25= 25.0, null), (F26= 26.0, null), (F27= 27.0, null), (F28= 28.0, null), (F29= 29.0, null), (F30= 30.0, null), (F31= 31.0, null)]
 
 Logs
 ------------------------------------
@@ -654,7 +655,7 @@ Time| name | Busy  |  V  |  Q   | effectiveAddress
 
 Register File
 ------------------------------------
-[(F0= 0.0, null), (F1= 1.0, null), (F2= 2.0, null), (F3= 3.0, null), (F4= -1.0, null), (F5= 17.0, null), (F6= 8.5, null), (F7= 7.0, null), (F8= 8.0, null), (F9= 9.0, null), (F10= 15.0, null), (F11= 11.0, null), (F12= 91.0, null), (F13= 13.0, null), (F14= 14.0, null), (F15= 15.0, null), (F16= 16.0, null), (F17= 17.0, null), (F18= 18.0, null), (F19= 19.0, null), (F20= 20.0, null), (F21= 21.0, null), (F22= 22.0, null), (F23= 23.0, null), (F24= 24.0, null), (F25= 25.0, null), (F26= 26.0, null), (F27= 27.0, null), (F28= 28.0, null), (F29= 29.0, null), (F30= 30.0, null), (F31= 31.0, null)]
+[(F0= 0.0, null), (F1= 1.0, null), (F2= 2.0, null), (F3= 3.0, null), (F4= -1.0, null), (F5= 17.0, null), (F6= 8.5, null), (F7= 7.0, null), (F8= 8.0, null), (F9= 9.0, null), (F10= 100.0, null), (F11= 11.0, null), (F12= 91.0, null), (F13= 13.0, null), (F14= 14.0, null), (F15= 15.0, null), (F16= 16.0, null), (F17= 17.0, null), (F18= 18.0, null), (F19= 19.0, null), (F20= 20.0, null), (F21= 21.0, null), (F22= 22.0, null), (F23= 23.0, null), (F24= 24.0, null), (F25= 25.0, null), (F26= 26.0, null), (F27= 27.0, null), (F28= 28.0, null), (F29= 29.0, null), (F30= 30.0, null), (F31= 31.0, null)]
 
 Logs
 ------------------------------------

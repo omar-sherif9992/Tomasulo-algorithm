@@ -9,7 +9,7 @@ const RegisterFile: Register[] = new Array(32).fill(1).map((_, i) => (
     }
 ));
 
-const MemoryArray: number[] = new Array(32).fill(1).map((_, i) => (
+const MemoryArray: number[] = new Array(150).fill(1).map((_, i) => (
     i
 ));
 
@@ -76,6 +76,7 @@ const StoreBuffers: StoreBuffer[] = new Array(2).fill(1).map((_, i) => {
         op:null,    
         instructionIndex:null,
         registerDestinationValue:null,
+        instructionString:null
     }
 });
 

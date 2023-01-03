@@ -45,6 +45,8 @@ export type StoreBuffer = {
     op:INSTRUCTION.SD|null;
     instructionIndex:number|null;
     registerDestinationValue:number|null;
+    instructionString:string;
+
 }
 
 // S.D f1,100 // f1 register store it in memory address(effectiveAddress) 100

@@ -20,6 +20,7 @@ function CycleTable  ({cycleTable}:{
       <tbody>
         {cycleTable.map((cycle, index) => (
           <tr key={index+232*32312}>
+              <td>{cycle.timeLeft ===null?'-':cycle.timeLeft}</td>
               <td>{cycle.instruction ===null?'-':cycle.instruction}</td>
               <td>{cycle.issueCycle ===null?'-':cycle.issueCycle }</td>
               <td>{cycle.startExecuteCycle ===null?'-':cycle.startExecuteCycle }</td>

@@ -1,5 +1,4 @@
 import {  ArithmeticReservationStation, logType, latencyType, StoreBuffer, LoadBuffer, Register } from '../common/types';
-import { RegisterFile, AddReservationStations, MulReservationStations, LoadBuffers, StoreBuffers, printStations } from './Arrays';
 import INSTRUCTION from '../common/Instruction.enum'
 const instructionSyntaxError = 'Syntax Error Instruction';
 
@@ -8,11 +7,11 @@ class Execute {
     clockCycle: number;
     latency: latencyType;
     setRegisterFile:(registerFile: Register[])=>void;
-    setAddReservationStations:(addReservationStations:ArithmeticReservationStation[],timeLeft:number,instructionIndex:number,issueCycle:(number|null),startExecuteCycle:(number|null),endExecute:(number|null),writeResultCycle:(number|null))=>void;
-    setMulReservationStations:(mulReservationStations:ArithmeticReservationStation[],timeLeft:number,instructionIndex:number,issueCycle:(number|null),startExecuteCycle:(number|null),endExecute:(number|null),writeResultCycle:(number|null))=>void;
-    setLoadBuffers:(loadBuffers: LoadBuffer[],timeLeft:number,instructionIndex:number,issueCycle:(number|null),startExecuteCycle:(number|null),endExecute:(number|null),writeResultCycle:(number|null))=>void;
-    setStoreBuffers:(storeBuffers:StoreBuffer[],timeLeft:number,instructionIndex:number,issueCycle:(number|null),startExecuteCycle:(number|null),endExecute:(number|null),writeResultCycle:(number|null))=>void;
-    setMemoryArray:(memoryArray:number[],timeLeft:number,instructionIndex:number,issueCycle:(number|null),startExecuteCycle:(number|null),endExecute:(number|null),writeResultCycle:(number|null))=>void;
+    setAddReservationStations:(addReservationStations:ArithmeticReservationStation[],instruction:(string|null),timeLeft:number,instructionIndex:number,issueCycle:(number|null),startExecuteCycle:(number|null),endExecute:(number|null),writeResultCycle:(number|null))=>void;
+    setMulReservationStations:(mulReservationStations:ArithmeticReservationStation[],instruction:(string|null),timeLeft:number,instructionIndex:number,issueCycle:(number|null),startExecuteCycle:(number|null),endExecute:(number|null),writeResultCycle:(number|null))=>void;
+    setLoadBuffers:(loadBuffers: LoadBuffer[],instruction:(string|null),timeLeft:number,instructionIndex:number,issueCycle:(number|null),startExecuteCycle:(number|null),endExecute:(number|null),writeResultCycle:(number|null))=>void;
+    setStoreBuffers:(storeBuffers:StoreBuffer[],instruction:(string|null),timeLeft:number,instructionIndex:number,issueCycle:(number|null),startExecuteCycle:(number|null),endExecute:(number|null),writeResultCycle:(number|null))=>void;
+    setMemoryArray:(memoryArray:number[],instruction:(string|null),timeLeft:number,instructionIndex:number,issueCycle:(number|null),startExecuteCycle:(number|null),endExecute:(number|null),writeResultCycle:(number|null))=>void;
     registerFile:Register[];
     addReservationStations:ArithmeticReservationStation[];
     mulReservationStations:ArithmeticReservationStation[];
@@ -26,11 +25,11 @@ class Execute {
         clockCycle: number,
         latency: latencyType,
         setRegisterFile:(registerFile: Register[])=>void,
-        setAddReservationStations:(addReservationStations:ArithmeticReservationStation[],timeLeft:number,instructionIndex:number,issueCycle:(number|null),startExecuteCycle:(number|null),endExecute:(number|null),writeResultCycle:(number|null))=>void,
-        setMulReservationStations:(mulReservationStations:ArithmeticReservationStation[],timeLeft:number,instructionIndex:number,issueCycle:(number|null),startExecuteCycle:(number|null),endExecute:(number|null),writeResultCycle:(number|null))=>void,
-        setLoadBuffers:(loadBuffers: LoadBuffer[],timeLeft:number,instructionIndex:number,issueCycle:(number|null),startExecuteCycle:(number|null),endExecute:(number|null),writeResultCycle:(number|null))=>void,
-        setStoreBuffers:(storeBuffers:StoreBuffer[],timeLeft:number,instructionIndex:number,issueCycle:(number|null),startExecuteCycle:(number|null),endExecute:(number|null),writeResultCycle:(number|null))=>void,
-        setMemoryArray:(memoryArray:number[],timeLeft:number,instructionIndex:number,issueCycle:(number|null),startExecuteCycle:(number|null),endExecute:(number|null),writeResultCycle:(number|null))=>void,
+        setAddReservationStations:(addReservationStations:ArithmeticReservationStation[],instruction:(string|null),timeLeft:number,instructionIndex:number,issueCycle:(number|null),startExecuteCycle:(number|null),endExecute:(number|null),writeResultCycle:(number|null))=>void,
+        setMulReservationStations:(mulReservationStations:ArithmeticReservationStation[],instruction:(string|null),timeLeft:number,instructionIndex:number,issueCycle:(number|null),startExecuteCycle:(number|null),endExecute:(number|null),writeResultCycle:(number|null))=>void,
+        setLoadBuffers:(loadBuffers: LoadBuffer[],instruction:(string|null),timeLeft:number,instructionIndex:number,issueCycle:(number|null),startExecuteCycle:(number|null),endExecute:(number|null),writeResultCycle:(number|null))=>void,
+        setStoreBuffers:(storeBuffers:StoreBuffer[],instruction:(string|null),timeLeft:number,instructionIndex:number,issueCycle:(number|null),startExecuteCycle:(number|null),endExecute:(number|null),writeResultCycle:(number|null))=>void,
+        setMemoryArray:(memoryArray:number[],instruction:(string|null),timeLeft:number,instructionIndex:number,issueCycle:(number|null),startExecuteCycle:(number|null),endExecute:(number|null),writeResultCycle:(number|null))=>void,
         registerFile:Register[],
         addReservationStations:ArithmeticReservationStation[],
         mulReservationStations:ArithmeticReservationStation[],
@@ -158,9 +157,10 @@ class Execute {
         const { effectiveAddress, registerSourceIndex } = instruction;
         if(registerSourceIndex && effectiveAddress){
         const registerSource = this.registerFile[registerSourceIndex];
-    /*     const newMemory=[...this.memoryArray];
+         const newMemory=[...this.memoryArray];
         newMemory[effectiveAddress] = registerSource.value;
-        this.setMemoryArray(newMemory); */
+        await this.setMemoryArray(this.memoryArray,instruction.instructionString,instruction.timeLeft,instruction.instructionIndex,null,null,null,this.clockCycle);
+
       await  this.setDisplayLog({ message: `SD.D  ${registerSource.name} stored in M[${effectiveAddress}] is executed`, clockCycle: this.clockCycle });
         return  registerSource.value;
     }
@@ -181,16 +181,20 @@ class Execute {
                 console.log('registerDestinationValue');
                 console.log(registerDestinationValue);
                 // deep cloning for react state
+                const startExecuteCycle= station.timeLeft === this.latency[station.op]?this.clockCycle:null;
                 this.addReservationStations[index] = {
                ...this.addReservationStations[index],
                     registerDestinationValue,
                     timeLeft:0 // decrement to write back at next cycle
                 };
-              await  this.setAddReservationStations(this.addReservationStations,this.addReservationStations[index].timeLeft,this.addReservationStations[index].instructionIndex,null,null,this.clockCycle,null); 
+
+              await  this.setAddReservationStations(this.addReservationStations,station.instructionString,this.addReservationStations[index].timeLeft,this.addReservationStations[index].instructionIndex,null,startExecuteCycle,this.clockCycle,null); 
 
             } else if (station.busy && station.Vj && station.Vk && station.timeLeft >1 ) { // till the 2 operands are filled with the correct value
+                const startExecuteCycle= station.timeLeft === this.latency[station.op]?this.clockCycle:null;
+           
                 this.addReservationStations[index].timeLeft!--;
-                await  this.setAddReservationStations(this.addReservationStations,this.addReservationStations[index].timeLeft,this.addReservationStations[index].instructionIndex,null,this.clockCycle,null,null); 
+                await  this.setAddReservationStations(this.addReservationStations,station.instructionString,this.addReservationStations[index].timeLeft,this.addReservationStations[index].instructionIndex,null,startExecuteCycle,null,null); 
             }
         });
     }
@@ -199,17 +203,20 @@ class Execute {
        await this.mulReservationStations.forEach(async(station, index) => {
             if (station.busy && station.timeLeft === 1) {
                 const registerDestinationValue=await this.executeInstruction(station);
+                const startExecuteCycle= station.timeLeft === this.latency[station.op]?this.clockCycle:null;
                 this.mulReservationStations[index] = {
                     ...this.mulReservationStations[index],
                     registerDestinationValue,
                     timeLeft:0 // decrement to write back at next cycle
                 };
 
-                await  this.setMulReservationStations(this.mulReservationStations,this.mulReservationStations[index].timeLeft,this.mulReservationStations[index].instructionIndex,null,null,this.clockCycle,null); 
+                await  this.setMulReservationStations(this.mulReservationStations,station.instructionString,this.mulReservationStations[index].timeLeft,this.mulReservationStations[index].instructionIndex,null,startExecuteCycle,this.clockCycle,null); 
 
             } else if (station.busy && station.Vj && station.Vk && station.timeLeft >1 ) {// till the 2 operands are filled with the correct value
+                const startExecuteCycle= station.timeLeft === this.latency[station.op]?this.clockCycle:null;
+
                 this.mulReservationStations[index].timeLeft!--;
-                await  this.setMulReservationStations(this.mulReservationStations,this.mulReservationStations[index].timeLeft,this.mulReservationStations[index].instructionIndex,null,this.clockCycle,null,null); 
+                await  this.setMulReservationStations(this.mulReservationStations,station.instructionString,this.mulReservationStations[index].timeLeft,this.mulReservationStations[index].instructionIndex,null,startExecuteCycle,null,null); 
             }
         });
     }
@@ -218,18 +225,23 @@ class Execute {
        await this.loadBuffers.forEach(async(buffer, index) => {
             // TODO: We need to check here if multiple writes will occur what will occur
             if (buffer.busy && buffer.timeLeft === 1) {
+                const startExecuteCycle= buffer.timeLeft === this.latency[buffer.op]?this.clockCycle:null;
+
               const  registerDestinationValue =await this.executeInstruction(buffer);
                 this.loadBuffers[index] = {
                     ...this.loadBuffers[index],
                     registerDestinationValue,
-                    timeLeft:0 // decrement to write back at next cycle
-
+                    timeLeft:0 
                 };
-                await  this.setLoadBuffers(this.loadBuffers,this.loadBuffers[index].timeLeft,this.loadBuffers[index].instructionIndex,null,null,this.clockCycle,null); 
+
+                await  this.setLoadBuffers(this.loadBuffers,buffer.instructionString,this.loadBuffers[index].timeLeft,this.loadBuffers[index].instructionIndex,null,startExecuteCycle,this.clockCycle,null); 
 
             } else if (buffer.busy && buffer.registerDestinationIndex && buffer.timeLeft >1) {
+                const startExecuteCycle= buffer.timeLeft === this.latency[buffer.op]?this.clockCycle:null;
+          
+
                 this.loadBuffers[index].timeLeft!--;
-                await  this.setLoadBuffers(this.loadBuffers,this.loadBuffers[index].timeLeft,this.loadBuffers[index].instructionIndex,null,this.clockCycle,null,null); 
+                await  this.setLoadBuffers(this.loadBuffers,buffer.instructionString,this.loadBuffers[index].timeLeft,this.loadBuffers[index].instructionIndex,null,startExecuteCycle,null,null); 
 
             }
         });
@@ -239,17 +251,23 @@ class Execute {
         this.storeBuffers.forEach(async(buffer, index) => {
             // TODO: We need to check here if multiple writes will occur what will occur
             if (buffer.busy && buffer.timeLeft === 1) {
+                const startExecuteCycle= buffer.timeLeft === this.latency[buffer.op]?this.clockCycle:null;
+
             const registerDestinationValue= await   this.executeInstruction(buffer);
             this.storeBuffers[index] = {
                     ...this.storeBuffers[index],
                     registerDestinationValue,
                     timeLeft:0 // decrement to write back at next cycle
                 };
-                await  this.setStoreBuffers(this.storeBuffers,this.storeBuffers[index].timeLeft,this.storeBuffers[index].instructionIndex,null,null,this.clockCycle,null); 
+
+
+                await  this.setStoreBuffers(this.storeBuffers,buffer.instructionString,this.storeBuffers[index].timeLeft,this.storeBuffers[index].instructionIndex,null,startExecuteCycle,this.clockCycle,null); 
 
             } else if (buffer.busy && buffer.registerSourceIndex && buffer.timeLeft >1) {
+             
+                const startExecuteCycle= buffer.timeLeft === this.latency[buffer.op]?this.clockCycle:null;
                 this.storeBuffers[index].timeLeft--;
-                await  this.setStoreBuffers(this.storeBuffers,this.storeBuffers[index].timeLeft,this.storeBuffers[index].instructionIndex,null,this.clockCycle,null,null); 
+                await  this.setStoreBuffers(this.storeBuffers,buffer.instructionString,this.storeBuffers[index].timeLeft,this.storeBuffers[index].instructionIndex,null,startExecuteCycle,null,null); 
 
             }
         });

@@ -1,5 +1,4 @@
 import {  ArithmeticReservationStation, logType, latencyType, StoreBuffer, LoadBuffer, Register } from '../common/types';
-import {  LoadBuffers, StoreBuffers, printStations } from './Arrays';
 import INSTRUCTION from '../common/Instruction.enum'
 import { Alert } from 'react-bootstrap';
 const instructionSyntaxError = 'Syntax Error Instruction';
@@ -8,35 +7,37 @@ class Bus {
     setDisplayLog: (log: logType) => void;
     clockCycle: number;
     latency: latencyType;
-    setRegisterFile: (registerFile: Register[]) => void;
-    setAddReservationStations: (addReservationStations: ArithmeticReservationStation[] ) => void;
-    setMulReservationStations: (mulReservationStations: ArithmeticReservationStation[]) => void;
-    setLoadBuffers: (loadBuffers: typeof LoadBuffers) => void;
-    setStoreBuffers: (storeBuffers: typeof StoreBuffers) => void;
-    setMemoryArray: (memoryArray: number[]) => void;
-    registerFile: Register[];
-    addReservationStations: ArithmeticReservationStation [];
-    mulReservationStations: ArithmeticReservationStation [];
-    loadBuffers: typeof LoadBuffers;
-    storeBuffers: typeof StoreBuffers;
-    memoryArray: number[]
+    setRegisterFile:(registerFile: Register[])=>void;
+    setAddReservationStations:(addReservationStations:ArithmeticReservationStation[],instruction:(string|null),timeLeft:number,instructionIndex:number,issueCycle:(number|null),startExecuteCycle:(number|null),endExecute:(number|null),writeResultCycle:(number|null))=>void;
+    setMulReservationStations:(mulReservationStations:ArithmeticReservationStation[],instruction:(string|null),timeLeft:number,instructionIndex:number,issueCycle:(number|null),startExecuteCycle:(number|null),endExecute:(number|null),writeResultCycle:(number|null))=>void;
+    setLoadBuffers:(loadBuffers: LoadBuffer[],instruction:(string|null),timeLeft:number,instructionIndex:number,issueCycle:(number|null),startExecuteCycle:(number|null),endExecute:(number|null),writeResultCycle:(number|null))=>void;
+    setStoreBuffers:(storeBuffers:StoreBuffer[],instruction:(string|null),timeLeft:number,instructionIndex:number,issueCycle:(number|null),startExecuteCycle:(number|null),endExecute:(number|null),writeResultCycle:(number|null))=>void;
+    setMemoryArray:(memoryArray:number[],instruction:(string|null),timeLeft:number,instructionIndex:number,issueCycle:(number|null),startExecuteCycle:(number|null),endExecute:(number|null),writeResultCycle:(number|null))=>void;
+    registerFile:Register[];
+    addReservationStations:ArithmeticReservationStation[];
+    mulReservationStations:ArithmeticReservationStation[];
+    loadBuffers:LoadBuffer[];
+    storeBuffers: StoreBuffer[];
+    memoryArray:number[];
+
+ 
 
     constructor(
         setDisplayLog: (log: logType) => void,
         clockCycle: number,
         latency: latencyType,
-        setRegisterFile: (registerFile: Register[]) => void,
-        setAddReservationStations: (addReservationStations: ArithmeticReservationStation[]) => void,
-        setMulReservationStations: (mulReservationStations: ArithmeticReservationStation[]) => void,
-        setLoadBuffers: (loadBuffers: typeof LoadBuffers) => void,
-        setStoreBuffers: (storeBuffers: typeof StoreBuffers) => void,
-        setMemoryArray: (memoryArray: number[]) => void,
-        registerFile: Register[],
-        addReservationStations: ArithmeticReservationStation[],
-        mulReservationStations: ArithmeticReservationStation[],
-        loadBuffers: typeof LoadBuffers,
-        storeBuffers: typeof StoreBuffers,
-        memoryArray: number[],
+        setRegisterFile:(registerFile: Register[])=>void,
+        setAddReservationStations:(addReservationStations:ArithmeticReservationStation[],instruction:(string|null),timeLeft:number,instructionIndex:number,issueCycle:(number|null),startExecuteCycle:(number|null),endExecute:(number|null),writeResultCycle:(number|null))=>void,
+        setMulReservationStations:(mulReservationStations:ArithmeticReservationStation[],instruction:(string|null),timeLeft:number,instructionIndex:number,issueCycle:(number|null),startExecuteCycle:(number|null),endExecute:(number|null),writeResultCycle:(number|null))=>void,
+        setLoadBuffers:(loadBuffers: LoadBuffer[],instruction:(string|null),timeLeft:number,instructionIndex:number,issueCycle:(number|null),startExecuteCycle:(number|null),endExecute:(number|null),writeResultCycle:(number|null))=>void,
+        setStoreBuffers:(storeBuffers:StoreBuffer[],instruction:(string|null),timeLeft:number,instructionIndex:number,issueCycle:(number|null),startExecuteCycle:(number|null),endExecute:(number|null),writeResultCycle:(number|null))=>void,
+        setMemoryArray:(memoryArray:number[],instruction:(string|null),timeLeft:number,instructionIndex:number,issueCycle:(number|null),startExecuteCycle:(number|null),endExecute:(number|null),writeResultCycle:(number|null))=>void,
+        registerFile:Register[],
+        addReservationStations:ArithmeticReservationStation[],
+        mulReservationStations:ArithmeticReservationStation[],
+        loadBuffers:LoadBuffer[],
+        storeBuffers: StoreBuffer[],
+        memoryArray:number[],
     ) {
 
         this.setDisplayLog = setDisplayLog;
@@ -54,6 +55,9 @@ class Bus {
         this.loadBuffers = loadBuffers;
         this.storeBuffers = storeBuffers;
         this.memoryArray = memoryArray;
+
+        
+
     }
 
     async broadcast() {
@@ -120,9 +124,13 @@ class Bus {
                     }
             }
         });
+        if(writeStation === null) return;    
+
 
         if (writeStation) // a store instruction wants to write back
         {
+            const targetStoreBuffer=Object.assign({},  this.storeBuffers[bufferIndex]);
+
             // empty store buffer
             this.storeBuffers[bufferIndex] = {
                 ...this.storeBuffers[bufferIndex],
@@ -133,18 +141,20 @@ class Bus {
                 registerDestinationValue:null,
                 instructionIndex:null
             };
-           await this.setStoreBuffers(this.storeBuffers);
+           await this.setStoreBuffers(this.storeBuffers,targetStoreBuffer.instructionString,targetStoreBuffer.timeLeft,targetStoreBuffer.instructionIndex,null,null,null,this.clockCycle);
        
             // write to memory
-            this.memoryArray[writeStation.effectiveAddress] = writeStation.registerDestinationValue;
-          await  this.setMemoryArray(this.memoryArray);
-           await this.setDisplayLog({message:`Memory ${writeStation.effectiveAddress} is written with value ${writeStation.registerDestinationValue} at clock cycle ${this.clockCycle}`,clockCycle:this.clockCycle});
+            /* this.memoryArray[writeStation.effectiveAddress] = writeStation.registerDestinationValue;
+            await this.setMemoryArray(this.memoryArray,targetStoreBuffer.instructionString,targetStoreBuffer.timeLeft,targetStoreBuffer.instructionIndex,null,null,null,this.clockCycle);
+      */      await this.setDisplayLog({message:`Memory ${writeStation.effectiveAddress} is written with value ${writeStation.registerDestinationValue} at clock cycle ${this.clockCycle}`,clockCycle:this.clockCycle});
             }
     }
 
 
    async writeBack(writeStation:ArithmeticReservationStation | LoadBuffer,reservationStationType:string,reservationIndex:number) {
-        if(writeStation!==null){
+    if(writeStation === null) return;    
+    
+    if(writeStation!==null){
             if(this.registerFile[writeStation.registerDestinationIndex].reservationStageName === writeStation.name ){
                 this.registerFile[writeStation.registerDestinationIndex].value = writeStation.registerDestinationValue;
                 this.registerFile[writeStation.registerDestinationIndex].reservationStageName = null;
@@ -162,7 +172,9 @@ class Bus {
                         Qj: null,
                         Vj: writeStation.registerDestinationValue
                     };
-                 await   this.setAddReservationStations(this.addReservationStations);
+                    const targetAddReservationStations=this.addReservationStations[index];
+
+                 await   this.setAddReservationStations(this.addReservationStations,targetAddReservationStations.instructionString,targetAddReservationStations.timeLeft,targetAddReservationStations.instructionIndex,null,null,null,null);
 
                 }
                 if(station.Qk === writeStation.name){
@@ -171,7 +183,9 @@ class Bus {
                         Qk: null,
                         Vk: writeStation.registerDestinationValue
                     };
-                 await this.setAddReservationStations(this.addReservationStations);
+                    const targetAddReservationStations=this.addReservationStations[index];
+
+                    await   this.setAddReservationStations(this.addReservationStations,targetAddReservationStations.instructionString,targetAddReservationStations.timeLeft,targetAddReservationStations.instructionIndex,null,null,null,null);
                 }
             });
 
@@ -182,7 +196,10 @@ class Bus {
                         Qj: null,
                         Vj: writeStation.registerDestinationValue
                     };
-                  await  this.setMulReservationStations(this.mulReservationStations);
+                    const targetMulReservationStations=this.mulReservationStations[index];
+
+                    await   this.setMulReservationStations(this.mulReservationStations,targetMulReservationStations.instructionString,targetMulReservationStations.timeLeft,targetMulReservationStations.instructionIndex,null,null,null,null);
+
                 }
                 if(station.Qk === writeStation.name){
                     this.mulReservationStations[index] = {
@@ -190,7 +207,9 @@ class Bus {
                         Qk: null,
                         Vk: writeStation.registerDestinationValue
                     };
-                 await   this.setMulReservationStations(this.mulReservationStations);
+                    const targetMulReservationStations=this.mulReservationStations[index];
+
+                    await   this.setMulReservationStations(this.mulReservationStations,targetMulReservationStations.instructionString,targetMulReservationStations.timeLeft,targetMulReservationStations.instructionIndex,null,null,null,null);
                 }
             });
 
@@ -201,7 +220,10 @@ class Bus {
                         Q: null,
                         V: writeStation.registerDestinationValue
                     };
-                 await   this.setStoreBuffers(this.storeBuffers);
+
+                    const targetStoreBuffers=this.storeBuffers[index];
+
+                    await   this.setStoreBuffers(this.storeBuffers,targetStoreBuffers.instructionString,targetStoreBuffers.timeLeft,targetStoreBuffers.instructionIndex,null,null,null,null);
                 }
             });
 
@@ -212,6 +234,9 @@ class Bus {
             
             // emptying the according reservation station
             if(reservationStationType==='Add'){
+
+                const targetAddReservationStations=Object.assign({},  this.addReservationStations[reservationIndex]);
+
                 this.addReservationStations[reservationIndex] = {
                     ...this.addReservationStations[reservationIndex],
                     busy: false,
@@ -227,9 +252,14 @@ class Bus {
                     instructionIndex:null
 
                 };
-                await this.setAddReservationStations(this.addReservationStations);
-            }
+                
+
+
+                await   this.setAddReservationStations(this.addReservationStations,targetAddReservationStations.instructionString,null,targetAddReservationStations.instructionIndex,null,null,null,this.clockCycle);
+           }
             else if(reservationStationType==='Mul'){
+                const targetMulReservationStations=Object.assign({},  this.mulReservationStations[reservationIndex]);
+
                 this.mulReservationStations[reservationIndex] = {
                     ...this.mulReservationStations[reservationIndex],
                     busy: false,
@@ -244,9 +274,15 @@ class Bus {
                     registerDestinationValue:null,
                     instructionIndex:null
                 };
-              await  this.setMulReservationStations(this.mulReservationStations);
+
+                await   this.setMulReservationStations(this.mulReservationStations,targetMulReservationStations.instructionString,null,targetMulReservationStations.instructionIndex,null,null,null,this.clockCycle);
+
             }
             else if(reservationStationType==='Load'){
+                console.log('load buffer null')
+                console.log(this.loadBuffers[reservationIndex]);
+                const targetLoadBuffers=Object.assign({},  this.loadBuffers[reservationIndex]);
+
                 this.loadBuffers[reservationIndex] = {
                     ...this.loadBuffers[reservationIndex],
                     busy: false,
@@ -257,7 +293,9 @@ class Bus {
                     registerDestinationValue:null,
                     instructionIndex:null
                 };
-               await this.setLoadBuffers(this.loadBuffers);
+
+
+                await   this.setLoadBuffers(this.loadBuffers,targetLoadBuffers.instructionString,null,targetLoadBuffers.instructionIndex,null,null,null,this.clockCycle);
             }
         
         

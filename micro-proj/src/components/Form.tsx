@@ -12,7 +12,7 @@ function Form ({instructionValue,setInstructionsValue,Queue,latency,setLatency,s
     setInstructionsValue:React.Dispatch<React.SetStateAction<string>>,
     Queue:QueueType,
     latency:latencyType,
-    setLatency:React.Dispatch<React.SetStateAction<latencyType>>,
+    setLatency:(curr:latencyType)=>void,
     setStatus:React.Dispatch<React.SetStateAction<STATUS>>
     
 })  {
@@ -42,10 +42,10 @@ function Form ({instructionValue,setInstructionsValue,Queue,latency,setLatency,s
     <div className='col-4 my-5'>
     <label htmlFor="addlatency" className='form-label'>Latency of Add instructions</label>
     <input type="number" className='form-control' id='latency' value={latency['ADD.D']} onChange={(e)=>{
-        setLatency((prev)=>{
-            return {...prev,
-              'ADD.D': parseInt(e.target.value)
-    }})}}
+              setLatency({
+                ...latency,
+                'ADD.D': parseInt(e.target.value)
+        })}}
     />
 
     </div>
@@ -54,30 +54,32 @@ function Form ({instructionValue,setInstructionsValue,Queue,latency,setLatency,s
     <div className='col-4 my-5'>
     <label htmlFor="addlatency" className='form-label'>Latency of Subtract instructions</label>
     <input type="number" className='form-control' id='latency' value={latency['SUB.D']} onChange={(e)=>{
-        setLatency((prev)=>{
-            return {...prev,
+        setLatency({
+            ...latency,
               'SUB.D': parseInt(e.target.value)
-    }})}}
+    })}}
     />
     
     </div>
     <div className='col-4 my-5'>
     <label htmlFor="addlatency" className='form-label'>Latency of Multiply instructions</label>
     <input type="number" className='form-control' id='latency' value={latency['MUL.D']} onChange={(e)=>{
-        setLatency((prev)=>{
-            return {...prev,
+            setLatency({
+              ...latency,
               'MUL.D': parseInt(e.target.value)
-    }})}}
+      })}}
+  
     />
     
     </div>
     <div className='col-4 my-5'>
     <label htmlFor="addlatency" className='form-label'>Latency of Divide instructions</label>
     <input type="number" className='form-control' id='latency' value={latency['DIV.D']} onChange={(e)=>{
-        setLatency((prev)=>{
-            return {...prev,
-              'DIV.D': parseInt(e.target.value)
-    }})}}
+                setLatency({
+                  ...latency,
+                  'DIV.D': parseInt(e.target.value)
+          })}}
+ 
     />
     
     </div>
@@ -85,10 +87,11 @@ function Form ({instructionValue,setInstructionsValue,Queue,latency,setLatency,s
     <div className='col-4 my-5'>
     <label htmlFor="loadlatency" className='form-label'>Latency of Load instructions</label>
     <input type="number" className='form-control' id='loadlatency' value={latency['L.D']} onChange={(e)=>{
-        setLatency((prev)=>{
-            return {...prev,
-              'L.D': parseInt(e.target.value)
-    }})}}
+                     setLatency({
+                      ...latency,
+                      'L.D': parseInt(e.target.value)
+              })}}
+ 
     />
     
     </div>
@@ -96,10 +99,10 @@ function Form ({instructionValue,setInstructionsValue,Queue,latency,setLatency,s
     <div className='col-4 my-5'>
     <label htmlFor="storelatency" className='form-label'>Latency of Store instructions</label>
     <input type="number" className='form-control' id='storelatency' value={latency['S.D']} onChange={(e)=>{
-        setLatency((prev)=>{
-            return {...prev,
-              'S.D': parseInt(e.target.value)
-    }})}}
+                     setLatency({
+                      ...latency,
+                      'S.D': parseInt(e.target.value)
+              })}}
     />
     
     </div>
@@ -114,6 +117,8 @@ function Form ({instructionValue,setInstructionsValue,Queue,latency,setLatency,s
 </div>
 <div className='col-4 my-5'>
   <button className='btn btn-primary btn-lg' onClick={()=>{
+
+    Queue.enqueueQueue(parser.parseFile(instructionValue));
     setStatus(STATUS.ACTIVE);
   }
   }>Start</button>

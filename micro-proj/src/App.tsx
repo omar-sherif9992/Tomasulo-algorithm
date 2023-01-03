@@ -42,7 +42,7 @@ function App() {
 
   const [state,setState]=useState(
     {
-      initialLength:parser.parseFile(code).length,
+      isFinished:false,
       queue:parser.parseFile(code),
       clockCycle:0,
       currentInstruction:'',
@@ -120,7 +120,7 @@ await setState((prev)=>{return{...prev,queue:[...state.queue, ...cleanedRecords]
 
 , async removeItemByIndex(index:number){
     const newQueue = state.queue.filter((_, i) => i !== index);
-  await  setState((prev)=>{return{...prev,queue:[...state.queue, ...newQueue]}});
+  await  setState((prev)=>{return{...prev,queue:[...newQueue]}});
   }
 
 , async dequeue(){
@@ -128,6 +128,9 @@ await setState((prev)=>{return{...prev,queue:[...state.queue, ...cleanedRecords]
    await setState((prev)=>{return{...prev,queue:[ ...state.queue.slice(1).map(data=>
     data
    )]}});
+
+   console.log('state.queue');
+   console.log(state.queue);
 
     return item;
 }
@@ -142,24 +145,27 @@ await setState((prev)=>{return{...prev,queue:[...state.queue, ...cleanedRecords]
 }
 
 , length() {
-    return state.queue.length;
+  console.log('length.queue');
+    return this.queue.length;
 }
 }
 
-async function setLatency(currlatency){
+async function setLatency(currlatency:latencyType){
   await setState((prev)=>{return{...prev,latency:currlatency}});
 }
  async function setMemoryArray1(reservations:number[],instruction:(string|null),timeLeft:number,instructionIndex:number,issueCycle:(number|null),startExecuteCycle:(number|null),endExecute:(number|null),writeResultCycle:(number|null)){
-  const currentInstanceCycleTable=state.cycleTable[state.initialLength-instructionIndex];
-state.cycleTable[state.initialLength-instructionIndex]={
-  instruction:instruction?instruction:currentInstanceCycleTable.instruction,
-  timeLeft:timeLeft?timeLeft:currentInstanceCycleTable.timeLeft,
-  instructionIndex:instructionIndex?instructionIndex:currentInstanceCycleTable.instructionIndex,
-  issueCycle:issueCycle?issueCycle:currentInstanceCycleTable.issueCycle,
-  startExecuteCycle:startExecuteCycle?startExecuteCycle:currentInstanceCycleTable.startExecuteCycle,
-  endExecute:endExecute?endExecute:currentInstanceCycleTable.endExecute,
-  writeResultCycle:writeResultCycle?writeResultCycle:currentInstanceCycleTable.writeResultCycle
-};
+   if(instructionIndex!==null){
+    const currentInstanceCycleTable=state.cycleTable[state.cycleTable.length-instructionIndex];
+
+  state.cycleTable[state.cycleTable.length-instructionIndex]={
+    instruction :instruction!==null?instruction:currentInstanceCycleTable.instruction,
+    timeLeft :timeLeft!==null?timeLeft:currentInstanceCycleTable.timeLeft,
+    instructionIndex :instructionIndex!==null?instructionIndex:currentInstanceCycleTable.instructionIndex,
+    issueCycle :issueCycle!==null?issueCycle+1:currentInstanceCycleTable.issueCycle,
+    startExecuteCycle :startExecuteCycle!==null?startExecuteCycle+1:currentInstanceCycleTable.startExecuteCycle,
+    endExecute :endExecute!==null?endExecute+1:currentInstanceCycleTable.endExecute,
+    writeResultCycle :writeResultCycle!==null?writeResultCycle+1:currentInstanceCycleTable.writeResultCycle
+  };}
   await  setState(prev=>{
       return {...prev,
         memoryArray:[...reservations.map(data=>data)],
@@ -170,17 +176,18 @@ state.cycleTable[state.initialLength-instructionIndex]={
   }
   
 async function setMulReservationStations1(reservations:ArithmeticReservationStation[],instruction:(string|null),timeLeft:number,instructionIndex:number,issueCycle:(number|null),startExecuteCycle:(number|null),endExecute:(number|null),writeResultCycle:(number|null)){
-  const currentInstanceCycleTable=state.cycleTable[state.initialLength-instructionIndex];
+  if(instructionIndex!==null){
+    const currentInstanceCycleTable=state.cycleTable[state.cycleTable.length-instructionIndex];
 
-  state.cycleTable[state.initialLength-instructionIndex]={
-    instruction:instruction?instruction:currentInstanceCycleTable.instruction,
-    timeLeft:timeLeft?timeLeft:currentInstanceCycleTable.timeLeft,
-    instructionIndex:instructionIndex?instructionIndex:currentInstanceCycleTable.instructionIndex,
-    issueCycle:issueCycle?issueCycle:currentInstanceCycleTable.issueCycle,
-    startExecuteCycle:startExecuteCycle?startExecuteCycle:currentInstanceCycleTable.startExecuteCycle,
-    endExecute:endExecute?endExecute:currentInstanceCycleTable.endExecute,
-    writeResultCycle:writeResultCycle?writeResultCycle:currentInstanceCycleTable.writeResultCycle
-  };
+  state.cycleTable[state.cycleTable.length-instructionIndex]={
+    instruction :instruction!==null?instruction:currentInstanceCycleTable.instruction,
+    timeLeft :timeLeft!==null?timeLeft:currentInstanceCycleTable.timeLeft,
+    instructionIndex :instructionIndex!==null?instructionIndex:currentInstanceCycleTable.instructionIndex,
+    issueCycle :issueCycle!==null?issueCycle+1:currentInstanceCycleTable.issueCycle,
+    startExecuteCycle :startExecuteCycle!==null?startExecuteCycle+1:currentInstanceCycleTable.startExecuteCycle,
+    endExecute :endExecute!==null?endExecute+1:currentInstanceCycleTable.endExecute,
+    writeResultCycle :writeResultCycle!==null?writeResultCycle+1:currentInstanceCycleTable.writeResultCycle
+  };}
     await  setState(prev=>{
       return {...prev,
         mulReservationStations:[...reservations.map(data=>{return{...data}})],
@@ -191,17 +198,18 @@ async function setMulReservationStations1(reservations:ArithmeticReservationStat
   } 
 
 async function setStoreBuffers1(reservations:StoreBuffer[],instruction:(string|null),timeLeft:number,instructionIndex:number,issueCycle:(number|null),startExecuteCycle:(number|null),endExecute:(number|null),writeResultCycle:(number|null)){
-  const currentInstanceCycleTable=state.cycleTable[state.initialLength-instructionIndex];
+  if(instructionIndex!==null){
+    const currentInstanceCycleTable=state.cycleTable[state.cycleTable.length-instructionIndex];
 
-  state.cycleTable[state.initialLength-instructionIndex]={
-    instruction:instruction?instruction:currentInstanceCycleTable.instruction,
-    timeLeft:timeLeft?timeLeft:currentInstanceCycleTable.timeLeft,
-    instructionIndex:instructionIndex?instructionIndex:currentInstanceCycleTable.instructionIndex,
-    issueCycle:issueCycle?issueCycle:currentInstanceCycleTable.issueCycle,
-    startExecuteCycle:startExecuteCycle?startExecuteCycle:currentInstanceCycleTable.startExecuteCycle,
-    endExecute:endExecute?endExecute:currentInstanceCycleTable.endExecute,
-    writeResultCycle:writeResultCycle?writeResultCycle:currentInstanceCycleTable.writeResultCycle
-  }
+  state.cycleTable[state.cycleTable.length-instructionIndex]={
+    instruction :instruction!==null?instruction:currentInstanceCycleTable.instruction,
+    timeLeft :timeLeft!==null?timeLeft:currentInstanceCycleTable.timeLeft,
+    instructionIndex :instructionIndex!==null?instructionIndex:currentInstanceCycleTable.instructionIndex,
+    issueCycle :issueCycle!==null?issueCycle+1:currentInstanceCycleTable.issueCycle,
+    startExecuteCycle :startExecuteCycle!==null?startExecuteCycle+1:currentInstanceCycleTable.startExecuteCycle,
+    endExecute :endExecute!==null?endExecute+1:currentInstanceCycleTable.endExecute,
+    writeResultCycle :writeResultCycle!==null?writeResultCycle+1:currentInstanceCycleTable.writeResultCycle
+  };}
     await setState(prev=>{
       return {...prev,
         storeBuffers:[...reservations.map(data=>{return{...data}})],
@@ -210,18 +218,21 @@ async function setStoreBuffers1(reservations:StoreBuffer[],instruction:(string|n
     }
     );
   } 
-  async function setLoadBuffers1(reservations:LoadBuffer[],instruction:(string|null),timeLeft:number,instructionIndex:number,issueCycle:(number|null),startExecuteCycle:(number|null),endExecute:(number|null),writeResultCycle:(number|null)){
-    const currentInstanceCycleTable=state.cycleTable[state.initialLength-instructionIndex];
 
-    state.cycleTable[state.initialLength-instructionIndex]={
-      instruction:instruction?instruction:currentInstanceCycleTable.instruction,
-      timeLeft:timeLeft?timeLeft:currentInstanceCycleTable.timeLeft,
-      instructionIndex:instructionIndex?instructionIndex:currentInstanceCycleTable.instructionIndex,
-      issueCycle:issueCycle?issueCycle:currentInstanceCycleTable.issueCycle,
-      startExecuteCycle:startExecuteCycle?startExecuteCycle:currentInstanceCycleTable.startExecuteCycle,
-      endExecute:endExecute?endExecute:currentInstanceCycleTable.endExecute,
-      writeResultCycle:writeResultCycle?writeResultCycle:currentInstanceCycleTable.writeResultCycle
-    };
+  async function setLoadBuffers1(reservations:LoadBuffer[],instruction:(string|null),timeLeft:number,instructionIndex:number,issueCycle:(number|null),startExecuteCycle:(number|null),endExecute:(number|null),writeResultCycle:(number|null)){
+    
+    
+    if(instructionIndex!==null){
+      const currentInstanceCycleTable=state.cycleTable[state.cycleTable.length-instructionIndex];
+    state.cycleTable[state.cycleTable.length-instructionIndex]={
+      instruction :instruction!==null?instruction:currentInstanceCycleTable.instruction,
+      timeLeft :timeLeft!==null?timeLeft:currentInstanceCycleTable.timeLeft,
+      instructionIndex :instructionIndex!==null?instructionIndex:currentInstanceCycleTable.instructionIndex,
+      issueCycle :issueCycle!==null?issueCycle+1:currentInstanceCycleTable.issueCycle,
+      startExecuteCycle :startExecuteCycle!==null?startExecuteCycle+1:currentInstanceCycleTable.startExecuteCycle,
+      endExecute :endExecute!==null?endExecute+1:currentInstanceCycleTable.endExecute,
+      writeResultCycle :writeResultCycle!==null?writeResultCycle+1:currentInstanceCycleTable.writeResultCycle
+    };}
   await  setState(prev=>{
       return {...prev,
         loadBuffers:[...reservations.map(data=>{return{...data}})],
@@ -232,17 +243,19 @@ async function setStoreBuffers1(reservations:StoreBuffer[],instruction:(string|n
   };
 
   async  function setAddReservationStations1(reservations:ArithmeticReservationStation[],instruction:(string|null),timeLeft:number,instructionIndex:number,issueCycle:(number|null),startExecuteCycle:(number|null),endExecute:(number|null),writeResultCycle:(number|null)){
-    const currentInstanceCycleTable=state.cycleTable[state.initialLength-instructionIndex];
+    if(instructionIndex!==null){
+      const currentInstanceCycleTable=state.cycleTable[state.cycleTable.length-instructionIndex];
 
-state.cycleTable[state.initialLength-instructionIndex]={
-  instruction:instruction?instruction:currentInstanceCycleTable.instruction,
-  timeLeft:timeLeft?timeLeft:currentInstanceCycleTable.timeLeft,
-  instructionIndex:instructionIndex?instructionIndex:currentInstanceCycleTable.instructionIndex,
-  issueCycle:issueCycle?issueCycle:currentInstanceCycleTable.issueCycle,
-  startExecuteCycle:startExecuteCycle?  startExecuteCycle:currentInstanceCycleTable.startExecuteCycle,
-  endExecute:endExecute?endExecute:currentInstanceCycleTable.endExecute,
-  writeResultCycle:writeResultCycle?writeResultCycle:currentInstanceCycleTable.writeResultCycle
-}
+    state.cycleTable[state.cycleTable.length-instructionIndex]={
+      instruction :instruction!==null?instruction:currentInstanceCycleTable.instruction,
+      timeLeft :timeLeft!==null?timeLeft:currentInstanceCycleTable.timeLeft,
+      instructionIndex :instructionIndex!==null?instructionIndex:currentInstanceCycleTable.instructionIndex,
+      issueCycle :issueCycle!==null?issueCycle+1:currentInstanceCycleTable.issueCycle,
+      startExecuteCycle :startExecuteCycle!==null?startExecuteCycle+1:currentInstanceCycleTable.startExecuteCycle,
+      endExecute :endExecute!==null?endExecute+1:currentInstanceCycleTable.endExecute,
+      writeResultCycle :writeResultCycle!==null?writeResultCycle+1:currentInstanceCycleTable.writeResultCycle
+    };
+  }
     await setState(prev=>{
       return {...prev,
         addReservationStations:[...reservations.map(data=>{return{...data}})],
@@ -287,17 +300,9 @@ state.cycleTable[state.initialLength-instructionIndex]={
     )
   }
 
-
-
-
- /*  function setDisplayMessage(displayMessage:logType){
-    setLogs([displayMessage, ...logs]);
-  }
-  function setDisplayCurrentInstruction(instruction:string){
-    setCurrentInstruction(instruction);
-  } */
   async function nextClockCycle(){
-  await main(state.clockCycle,
+    if(!state.isFinished){
+  const isFinish=await main(state.clockCycle,
     Queue,
     state.latency,
     setCurrentInstruction1,
@@ -320,7 +325,16 @@ state.cycleTable[state.initialLength-instructionIndex]={
     setCycleTable
     );
 
+    if(isFinish){
+      setState((prev)=>{return{
+        ...prev,
+        isFinished:true,
+        status:STATUS.FINISHED
+        }})
+}
 setClockCycle1(state.clockCycle+1);
+
+    }
 
 
 }
@@ -351,6 +365,7 @@ setClockCycle1(state.clockCycle+1);
 <div className='d-flex'>
  <div className='py-5 d-flex flex-column gap-5'>
  {state.clockCycle>0 && <h2 className=''>Clock Cycle: {state.clockCycle}</h2>}
+ 
  <h5 className=''>Status of instruction queue: {status}</h5>
 
 <button className='btn btn-primary btn-lg' style={{

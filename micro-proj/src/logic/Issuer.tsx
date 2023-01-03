@@ -1,6 +1,7 @@
 import { ArithmeticInstruction, MemoryInstruction, ArithmeticReservationStation, logType, latencyType, LoadBuffer, Register, StoreBuffer } from '../common/types';
-import { RegisterFile, AddReservationStations, MulReservationStations, StoreBuffers, printStations } from './Arrays';
+import { printStations } from './Arrays';
 import INSTRUCTION from '../common/Instruction.enum'
+import { Alert } from 'react-bootstrap';
 const instructionSyntaxError = 'Syntax Error Instruction';
 
 class Issuer {
@@ -102,7 +103,7 @@ class Issuer {
                     Qj: this.registerFile[instruction.source1Index].reservationStageName ? this.registerFile[instruction.source1Index].reservationStageName : null,// if the found register is reserved by reservation station then the name of the reservation station otherwise null
                     Qk: this.registerFile[instruction.source2Index].reservationStageName ? this.registerFile[instruction.source2Index].reservationStageName : null,// if the found register is reserved by reservation station then the name of the reservation station otherwise null
                     A: 0,
-                    timeLeft: this.latency[instruction.operation],
+                    timeLeft: this.latency[instruction.operation]+1,
                     registerDestinationIndex: instruction.destinationIndex,
                     registerDestinationValue: null,
                     instructionIndex:instruction.instructionIndex,
@@ -146,13 +147,14 @@ class Issuer {
                         effectiveAddress: instruction.effectiveAddress,
                         V: this.registerFile[instruction.registerIndex].reservationStageName ? null : this.registerFile[instruction.registerIndex].value, // if the found register is reserved by reservation station then the value is null otherwise the value of the register
                         Q: this.registerFile[instruction.registerIndex].reservationStageName ? this.registerFile[instruction.registerIndex].reservationStageName : null,
-                        timeLeft: this.latency[instruction.operation],
+                        timeLeft: this.latency[instruction.operation]+1,
                         registerSourceIndex:instruction.registerIndex,
                         op:INSTRUCTION.SD,
                         registerDestinationValue: null,
-                        instructionIndex:instruction.instructionIndex,                        
+                        instructionIndex:instruction.instructionIndex,  
+                        instructionString:instruction.instructionString,                      
                     };
-                    await  this.setStoreBuffers(this.storeBuffers,this.latency[instruction.operation],instruction.instructionIndex,this.clockCycle,null,null,null);
+                    await  this.setStoreBuffers(this.storeBuffers,instruction.instructionString,this.latency[instruction.operation],instruction.instructionIndex,this.clockCycle,null,null,null);
                    await this.setDisplayLog({ message: `issue ${instruction.operation} instruction to store ${this.storeBuffers[stationSlot].name}  buffer `, clockCycle: this.clockCycle })
                     return true;
                 }
@@ -170,13 +172,15 @@ class Issuer {
                         name: this.loadBuffers[stationSlot].name,
                         busy: true,
                         effectiveAddress: instruction.effectiveAddress,
-                        timeLeft: this.latency[instruction.operation],
+                        timeLeft: this.latency[instruction.operation]+1,
                         registerDestinationIndex: instruction.registerIndex,
                         op:INSTRUCTION.LD,
                         registerDestinationValue: null,
-                        instructionIndex:instruction.instructionIndex,                        
+                        instructionIndex:instruction.instructionIndex,    
+                        instructionString:instruction.instructionString,                      
+                    
                     };
-                   await this.setLoadBuffers(this.loadBuffers,this.latency[instruction.operation],instruction.instructionIndex,this.clockCycle,null,null,null);
+                   await this.setLoadBuffers(this.loadBuffers,instruction.instructionString,this.latency[instruction.operation],instruction.instructionIndex,this.clockCycle,null,null,null);
 
                     // deep cloning for react state
                     // make the according register stall for the this load
