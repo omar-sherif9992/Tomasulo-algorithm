@@ -1,5 +1,10 @@
 ## Tomasulo algorithim 
 
+### it is implemented by:
+1- React with typescript : micro-proj
+
+2- Java :Tomasulo-java
+
 ### 1. Introduction
 - Tomasulo's algorithm is a computer architecture hardware algorithm for dynamic scheduling of instructions that allows out-of-order execution and enables more efficient use of multiple execution units. It was developed by John E. Tomasulo in 1967. The algorithm is named after him. The algorithm is used in modern superscalar processors to increase the number of instructions executed per clock cycle. It is a form of dynamic scheduling, which means that the instructions are not scheduled in the order in which they appear in the program. Instead, the instructions are scheduled dynamically, based on the availability of the execution units and the operands. The algorithm is also known as the reservation station algorithm.
 
